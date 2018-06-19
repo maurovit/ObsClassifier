@@ -2,20 +2,20 @@ import pandas as pd
 import tensorflow as tf
 
 TRAIN_PATH = "observer_dp_dataset.csv"
-TEST_PATH= "----"
+TEST_PATH= "observer_dp_dataset_test.csv"
 CSV_COLUMN_NAMES = ['CollectionVariables','AddListenerMethod','RemoveListenerMethod',
                     'ClassDeclarationKeyword','MethodsDeclarationKeyword','ClassType','ScanCollectionsMethod',
                     'SCMCallsAbsMethod','HasSuperclass','ImplementsInterfaces','ChangeState',
-                    'AfterChangeStateIterateOverList','NOPM','Role']
+                    'AfterChangeStateIterateOverList','Role']
 ROLES = ['Subject', 'Observer', 'ConcreteSubject', 'ConcreteObserver']
 
 def load_data(y_name='Role'):
     """Returns the iris dataset as (train_x, train_y), (test_x, test_y)."""
     train = pd.read_csv(TRAIN_PATH, names=CSV_COLUMN_NAMES, header=0, delimiter=';')
     train_x, train_y = train, train.pop(y_name)
-    #test = pd.read_csv(TEST_PATH, names=CSV_COLUMN_NAMES, header=0)
-    #test_x, test_y = test, test.pop(y_name)
-    return (train_x, train_y), (None,None) #Modificare
+    test = pd.read_csv(TEST_PATH, names=CSV_COLUMN_NAMES, header=0, delimiter=';')
+    test_x, test_y = test, test.pop(y_name)
+    return (train_x, train_y), (test_x,test_y)
 
 def train_input_fn(features, labels, batch_size):
     """An input function for training"""
@@ -49,7 +49,6 @@ def main():
     print("Ypsilons\n-----------------------------\n",train_y);
     dataset=train_input_fn(train_x,train_y,10);
     print("Dataset\n-----------------------------\n",dataset);
-    dataset.
 
 if __name__ == '__main__':
     main();

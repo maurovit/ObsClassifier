@@ -1,0 +1,30 @@
+SoftwareName;FQNClass;CollectionVariables;AddListenerMethod;RemoveListenerMethod;ClassDeclarationKeyword;MethodsDeclarationKeyword;ClassType;ScanCollectionsMethod;SCMCallsAbsMethod;HasSuperclass;ImplementsInterfaces;ChangeState;AfterChangeStateIterateOverList;Role
+MapperXML197;com.taursys.xml.Component.java;2;2;2;3;1;2;2;2;1;2;2;1;0
+QuickUML2001;diagram.AbstractDiagramModel.java;2;2;2;3;1;2;2;2;1;2;1;1;0
+JHotDraw60;org\jhotdraw\standard\AbstractCommand.java;2;2;2;2;1;2;2;2;1;2;2;1;0
+JHotDraw60;org.jhotdraw.util.PaletteButton.java;1;1;1;2;3;2;1;1;2;2;2;1;0
+JHotDraw v5.1;src\CH\ifa\draw\util\PaletteButton.java;1;1;1;2;2;2;1;1;2;2;2;1;0
+MapperXML197;com.taursys.xml.event.InputListener.java;1;1;1;2;3;3;1;1;2;1;1;1;1
+MapperXML197;com.taursys.xml.event.InitFormListener.java;1;1;1;2;3;3;1;1;2;1;1;1;1
+JHotDraw v5.1;src\CH\ifa\draw\framework\DrawingView.java;1;1;1;2;2;3;1;1;2;1;1;1;1
+JHotDraw60;org.jhotdraw.framework.ToolListener.java;1;1;1;2;3;3;1;1;1;1;1;1;1
+JHotDraw60;org.jhotdraw.util.PaletteListener.java;1;1;1;2;3;3;1;1;1;1;1;1;1
+JHotDraw v5.1;src\CH\ifa\draw\framework\Tool.java;1;1;1;3;3;3;1;1;1;1;1;1;1
+JUnit37;junit\framework\TestListener.java;1;1;1;2;3;3;1;1;1;1;1;1;1
+MapperXML197;com.taursys.xml.event.TriggerListener.java;1;1;1;2;3;3;1;1;2;1;1;1;1
+JRefactory2624;org.acm.seguin.refactor.TransformAST.java;1;1;1;3;2;2;1;1;1;1;1;1;1
+JHotDraw v5.1;src\CH\ifa\draw\framework\FigureChangeListener.java;1;1;1;2;2;3;1;1;2;1;1;1;1
+MapperXML197;com.taursys.swing.MDocument.java;2;2;2;2;1;1;2;2;2;2;2;2;2
+MapperXML197;com.taursys.xml.Form.java;2;2;2;3;1;1;2;2;2;1;2;1;2
+JHotDraw v5.1;src\CH\ifa\draw\figures\ElbowHandle.java;1;1;1;3;3;1;1;1;2;1;2;1;2
+JHotDraw60;org.jhotdraw.standard.ToggleGridCommand;2;2;2;3;1;1;2;2;2;1;2;1;2
+JUnit37;junit\framework\TestResult.java;2;2;2;3;1;1;2;2;2;1;2;2;2
+JHotDraw v5.1;src\CH\ifa\draw\standard\StandardDrawing.java;2;2;2;3;1;1;2;2;2;2;2;2;2
+JUnit37;junit\swingui\TestSuitePanel.java;1;1;1;2;3;1;1;1;2;2;2;1;3
+JHotDraw v5.1;src/CH/ifa/draw/application/DrawApplication.java;1;1;1;2;1;1;1;1;2;2;2;1;3
+JHotDraw60;org.jhotdraw.standard.ToolButton.java;1;1;1;2;3;1;1;1;2;2;2;1;3
+JHotDraw v5.1;src\CH\ifa\draw\standard\FigureChangeEventMulticaster.java;1;1;1;2;2;1;1;1;2;2;1;1;3
+QuickUML2001;diagram.DiagramUI.java (ModelHandler);1;1;1;2;3;1;1;1;1;2;1;1;3
+MapperXML197;com.taursys.swing.MComboBox.java;1;1;1;2;3;1;1;1;2;2;2;1;3
+JUnit37;junit\runner\BaseTestRunner.java;1;1;1;2;3;2;2;1;1;2;2;1;4
+JUnit37;junit\swingui\TestRunContext.java;1;1;1;3;3;3;1;1;1;1;1;1;4

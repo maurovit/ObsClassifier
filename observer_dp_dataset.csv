@@ -1,72 +1,64 @@
-SoftwareName;FQNClass;CollectionVariables;AddListenerMethod;RemoveListenerMethod;ClassDeclarationKeyword;MethodsDeclarationKeyword;ClassType;ScanCollectionsMethod;SCMCallsAbsMethod;HasSuperclass;ImplementsInterfaces;ChangeState;AfterChangeStateIterateOverList;NOPM;Role
-MapperXML197;com.taursys.swing.MComboBoxModel.java;1;1;1;[0,0,1];[1,0,0];[1,0,0];1;1;1;1;1;1;24;3
-MapperXML197;com.taursys.swing.EnableListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;1;0;0;0;1;2
-MapperXML197;com.taursys.swing.MComboBox.java;0;0;0;[0,1,0];[0,0,1];[1,0,0];0;0;1;1;1;0;27;4
-MapperXML197;com.taursys.swing.MDocument.java;1;1;1;[0,1,0];[1,0,0];[1,0,0];1;1;1;1;1;1;21;3
-MapperXML197;com.taursys.xml.Component.java;1;1;1;[0,0,1];[1,0,0];[0,1,0];1;1;0;1;1;0;18;1
-MapperXML197;com.taursys.xml.event.InputListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;1;0;0;0;1;2
-MapperXML197;com.taursys.xml.event.ParameterListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;1;0;0;0;1;2
-MapperXML197;com.taursys.xml.event.RecycleListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;1;0;0;0;1;2
-MapperXML197;com.taursys.xml.event.RenderListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;1;0;0;0;1;2
-MapperXML197;com.taursys.xml.event.TriggerListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;1;0;0;0;1;2
-MapperXML197;com.taursys.xml.event.CloseFormListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;1;0;0;0;1;2
-MapperXML197;com.taursys.xml.Form.java;1;1;1;[0,0,1];[1,0,0];[1,0,0];1;1;1;0;1;0;18;3
-MapperXML197;com.taursys.xml.event.InitContextListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;1;0;0;0;1;2
-MapperXML197;com.taursys.xml.event.InitFormListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;1;0;0;0;1;2
-MapperXML197;com.taursys.xml.event.OpenFormListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;1;0;0;0;1;2
-QuickUML2001;diagram.tool.AbstractTool.java;1;1;1;[0,0,1];[1,0,0];[0,1,0];1;1;0;1;0;0;4;1
-QuickUML2001;diagram.tool.ToolListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;0;0;0;0;2;2
-QuickUML2001;uml.ui.ToolPalette.java;0;0;0;[0,0,1];[0,1,0];[1,0,0];0;0;1;1;1;0;5;4
-QuickUML2001;diagram.AbstractSelectionModel.java;1;1;1;[0,0,1];[1,0,0];[0,1,0];1;1;0;1;0;0;2;1
-QuickUML2001;diagram.DiagramSelectionListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;0;0;0;0;2;2
-QuickUML2001;diagram.DefaultSelectionModel.java;1;1;1;[0,0,1];[1,0,0];[1,0,0];1;1;1;0;1;1;9;3
-QuickUML2001;diagram.DiagramUI.java (ModelHandler);0;0;0;[0,1,0];[0,0,1];[1,0,0];0;0;0;1;0;0;4;4
-QuickUML2001;diagram.AbstractDiagramModel.java;1;1;1;[0,0,1];[1,0,0];[0,1,0];1;1;0;1;0;0;2;1
-QuickUML2001;diagram.DiagramModelListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;0;0;0;0;2;2
-QuickUML2001;diagram.DefaultDiagramModel.java;1;1;1;[0,0,1];[1,0,0];[1,0,0];1;1;1;1;1;1;8;3
-JRefactory2624;org.acm.seguin.refactor.ComplexTransform.java;1;1;1;[0,0,1];[0,0,1];[1,0,0];1;1;0;0;1;0;7;3
-JRefactory2624;org.acm.seguin.refactor.TransformAST.java;0;0;0;[0,0,1];[0,1,0];[0,1,0];0;0;0;0;0;0;1;2
-JRefactory2624;rg.acm.seguin.refactor.method.AddConstructor.java;0;0;0;[0,0,1];[0,1,0];[1,0,0];0;0;1;0;0;0;2;4
-JRefactory2624;org.acm.seguin.uml.refactor.DialogViewListener.java;0;0;0;[0,1,0];[0,0,1];[0,1,0];0;0;1;0;0;0;2;2
-JRefactory2624;org.acm.seguin.uml.refactor.AddChildClassListener.java;0;0;0;[0,1,0];[0,0,1];[1,0,0];0;0;1;0;0;0;1;4
-JHotDraw v5.1;src\CH\ifa\draw\framework\DrawingChangeListener.java;0;0;0;[0,1,0];[0,1,0];[0,0,1];0;0;1;0;0;0;2;2
-JHotDraw v5.1;src\CH\ifa\draw\standard\StandardDrawing.java;1;1;1;[0,0,1];[1,0,0];[1,0,0];1;1;1;1;1;1;13;3
-JHotDraw v5.1;src\CH\ifa\draw\standard\StandardDrawingView.java;1;1;1;[0,1,0];[0,1,0];[1,0,0];1;1;1;1;1;1;52;4
-JHotDraw v5.1;src\CH\ifa\draw\standard\AbstractFigure.java;0;1;1;[0,0,1];[1,0,0];[0,1,0];0;0;0;1;1;1;43;1
-JHotDraw v5.1;src\CH\ifa\draw\framework\FigureChangeListener.java;0;0;0;[0,1,0];[0,1,0];[0,0,1];0;0;1;0;0;0;5;2
-JHotDraw v5.1;src\CH\ifa\draw\figures\PolyLineFigure.java;1;1;1;[0,0,1];[0,0,1];[1,0,0];1;0;1;0;1;1;27;3
-JHotDraw v5.1;src\CH\ifa\draw\standard\FigureChangeEventMulticaster.java;0;0;0;[0,1,0];[0,1,0];[1,0,0];0;0;1;1;0;0;7;4
-JHotDraw v5.1;src\CH\ifa\draw\framework\Figure.java;0;0;0;[0,0,1];[1,0,0];[0,0,1];0;0;1;0;0;0;33;1
-JHotDraw v5.1;src\CH\ifa\draw\figures\LineConnection.java;0;0;0;[0,0,1];[0,1,0];[1,0,0];0;0;1;1;1;0;30;2
-JHotDraw v5.1;src\CH\ifa\draw\framework\Painter.java;0;0;0;[0,0,1];[0,0,1];[0,0,1];0;0;1;0;0;0;1;5
-JHotDraw v5.1;src/CH/ifa/draw/standard/BufferedUpdateStrategy.java;0;0;0;[0,0,1];[0,0,1];[1,0,0];0;0;0;1;1;0;1;5
-JHotDraw v5.1;src\CH\ifa\draw\standard\AbstractHandle.java;0;0;0;[0,0,1];[0,0,1];[0,1,0];0;0;0;1;0;0;11;1
-JHotDraw v5.1;src\CH\ifa\draw\framework\DrawingView.java;0;0;0;[0,1,0];[0,1,0];[0,0,1];0;0;1;0;0;0;40;2
-JHotDraw v5.1;src\CH\ifa\draw\figures\ElbowHandle.java;0;0;0;[0,0,1];[0,0,1];[1,0,0];0;0;1;0;1;0;4;3
-JHotDraw v5.1;src\CH\ifa\draw\standard\ChangeConnectionHandle.java;0;0;0;[0,0,1];[0,0,1];[0,1,0];0;0;1;0;1;0;4;1
-JHotDraw v5.1;src\CH\ifa\draw\framework\Drawing.java;0;0;0;[0,1,0];[0,1,0];[0,0,1];0;0;1;0;0;0;27;2
-JHotDraw v5.1;src\CH\ifa\draw\standard\ChangeConnectionEndHandle.java;0;0;0;[0,0,1];[0,0,1];[1,0,0];0;0;1;0;1;0;2;3
-JHotDraw v5.1;src\CH\ifa\draw\standard\StandardDrawing.java;1;1;1;[0,0,1];[1,0,0];[1,0,0];1;1;1;1;1;1;13;4
-JHotDraw v5.1;src\CH\ifa\draw\standard\StandardDrawingView.java;1;1;1;[0,1,0];[0,1,0];[1,0,0];1;1;1;1;1;1;52;3
-JHotDraw v5.1;src\CH\ifa\draw\framework\Tool.java;0;0;0;[0,0,1];[0,0,1];[0,0,1];0;0;0;0;0;0;7;2
-JHotDraw v5.1;src\CH\ifa\draw\standard\AbstractTool.java;0;0;0;[0,0,1];[0,0,1];[1,0,0];0;0;0;1;1;0;11;4
-JHotDraw v5.1;src\CH\ifa\draw\framework\DrawingEditor.java;0;0;0;[0,0,1];[0,0,1];[0,0,1];0;0;0;0;0;0;6;2
-JHotDraw v5.1;src/CH/ifa/draw/application/DrawApplication.java;0;0;0;[0,1,0];[1,0,0];[1,0,0];0;0;1;1;1;0;15;4
-JHotDraw v5.1;src\CH\ifa\draw\util\PaletteButton.java;0;0;0;[0,1,0];[0,1,0];[0,1,0];0;0;1;1;1;0;18;1
-JHotDraw v5.1;src\CH\ifa\draw\util\PaletteListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;0;0;0;0;2;2
-JHotDraw v5.1;src\CH\ifa\draw\standard\ToolButton.java;0;0;0;[0,0,1];[0,0,1];[1,0,0];0;0;1;0;1;0;9;3
-JHotDraw v5.1;src\CH\ifa\draw\applet\DrawApplet.java;0;0;0;[0,1,0];[0,0,1];[1,0,0];0;0;1;1;1;0;8;4
-JHotDraw v5.1;src\CH\ifa\draw\framework\Drawing.java;0;0;0;[0,1,0];[0,1,0];[0,0,1];0;0;1;0;0;0;27;1
-JHotDraw v5.1;src\CH\ifa\draw\standard\StandardDrawing.java;1;1;1;[0,0,1];[1,0,0];[1,0,0];1;1;1;1;1;1;13;1
-JHotDraw v5.1;src\CH\ifa\draw\figures\EllipseFigure.java;0;0;0;[0,0,1];[0,0,1];[1,0,0];0;0;1;0;1;0;9;2
-JHotDraw v5.1;src\CH\ifa\draw\framework\FigureChangeListener.java;0;0;0;[0,1,0];[0,1,0];[0,0,1];0;0;1;0;0;0;5;3
-JHotDraw v5.1;src\CH\ifa\draw\figures\GroupFigure.java;1;1;1;[0,1,0];[1,0,0];[1,0,0];1;1;1;0;1;1;6;4
-JHotDraw v5.1;src\CH\ifa\draw\framework\Drawing.java;0;0;0;[0,1,0];[0,1,0];[0,0,1];0;0;1;0;0;0;27;1
-JHotDraw v5.1;src\CH\ifa\draw\framework\ConnectionFigure.java;0;0;0;[0,0,1];[0,1,0];[0,0,1];0;0;1;0;0;0;18;1
-JUnit37;junit\framework\TestResult.java;1;1;1;[0,0,1];[1,0,0];[1,0,0];1;1;1;0;1;1;18;3
-JUnit37;junit\framework\TestListener.java;0;0;0;[0,1,0];[0,0,1];[0,0,1];0;0;0;0;0;0;4;2
-JUnit37;junit\swingui\TestSuitePanel.java;0;0;0;[0,1,0];[0,0,1];[1,0,0];0;0;1;1;1;0;7;4
-JUnit37;junit\swingui\TestRunContext.java;0;0;0;[0,0,1];[0,0,1];[0,0,1];0;0;0;0;0;0;2;5
-JUnit37;junit\framework\Test.java;0;0;0;[0,0,1];[0,0,1];[0,0,1];0;0;0;0;0;0;2;5
-JUnit37;junit\textui\TestRunner.java;0;0;0;[0,0,1];[0,0,1];[1,0,0];1;1;0;1;1;0;14;5
-JUnit37;junit\runner\BaseTestRunner.java;0;0;0;[0,1,0];[0,0,1];[0,1,0];1;0;0;1;1;0;11;5
+SoftwareName;FQNClass;CollectionVariables;AddListenerMethod;RemoveListenerMethod;ClassDeclarationKeyword;MethodsDeclarationKeyword;ClassType;ScanCollectionsMethod;SCMCallsAbsMethod;HasSuperclass;ImplementsInterfaces;ChangeState;AfterChangeStateIterateOverList;Role
+MapperXML197;com.taursys.swing.MComboBoxModel.java;2;2;2;3;1;1;2;2;2;2;2;2;2
+MapperXML197;com.taursys.swing.EnableListener.java;1;1;1;2;3;3;1;1;2;1;1;1;1
+MapperXML197;com.taursys.xml.event.ParameterListener.java;1;1;1;2;3;3;1;1;2;1;1;1;1
+MapperXML197;com.taursys.xml.event.RecycleListener.java;1;1;1;2;3;3;1;1;2;1;1;1;1
+MapperXML197;com.taursys.xml.event.RenderListener.java;1;1;1;2;3;3;1;1;2;1;1;1;1
+MapperXML197;com.taursys.xml.event.CloseFormListener.java;1;1;1;2;3;3;1;1;2;1;1;1;1
+MapperXML197;com.taursys.xml.event.InitContextListener.java;1;1;1;2;3;3;1;1;2;1;1;1;1
+MapperXML197;com.taursys.xml.event.OpenFormListener.java;1;1;1;2;3;3;1;1;2;1;1;1;1
+QuickUML2001;diagram.tool.AbstractTool.java;2;2;2;3;1;2;2;2;1;2;1;1;0
+QuickUML2001;diagram.tool.ToolListener.java;1;1;1;2;3;3;1;1;1;1;1;1;1
+QuickUML2001;uml.ui.ToolPalette.java;1;1;1;3;2;1;1;1;2;2;2;1;3
+QuickUML2001;diagram.AbstractSelectionModel.java;2;2;2;3;1;2;2;2;1;2;1;1;0
+QuickUML2001;diagram.DiagramSelectionListener.java;1;1;1;2;3;3;1;1;1;1;1;1;1
+QuickUML2001;diagram.DefaultSelectionModel.java;2;2;2;3;1;1;2;2;2;1;2;2;2
+QuickUML2001;diagram.DiagramModelListener.java;1;1;1;2;3;3;1;1;1;1;1;1;1
+QuickUML2001;diagram.DefaultDiagramModel.java;2;2;2;3;1;1;2;2;2;2;2;2;2
+JRefactory2624;org.acm.seguin.refactor.ComplexTransform.java;2;2;2;3;3;1;2;2;1;1;2;1;2
+JRefactory2624;rg.acm.seguin.refactor.method.AddConstructor.java;1;1;1;3;2;1;1;1;2;1;1;1;3
+JRefactory2624;org.acm.seguin.uml.refactor.DialogViewListener.java;1;1;1;2;3;2;1;1;2;1;1;1;1
+JRefactory2624;org.acm.seguin.uml.refactor.AddChildClassListener.java;1;1;1;2;3;1;1;1;2;1;1;1;3
+JHotDraw v5.1;src\CH\ifa\draw\framework\DrawingChangeListener.java;1;1;1;2;2;3;1;1;2;1;1;1;1
+JHotDraw v5.1;src\CH\ifa\draw\standard\StandardDrawing.java;2;2;2;3;1;1;2;2;2;2;2;2;2
+JHotDraw v5.1;src\CH\ifa\draw\standard\StandardDrawingView.java;2;2;2;2;2;1;2;2;2;2;2;2;3
+JHotDraw v5.1;src\CH\ifa\draw\standard\AbstractFigure.java;1;2;2;3;1;2;1;1;1;2;2;2;0
+JHotDraw v5.1;src\CH\ifa\draw\figures\PolyLineFigure.java;2;2;2;3;3;1;2;1;2;1;2;2;2
+JHotDraw v5.1;src\CH\ifa\draw\framework\Figure.java;1;1;1;3;1;3;1;1;2;1;1;1;0
+JHotDraw v5.1;src\CH\ifa\draw\figures\LineConnection.java;1;1;1;3;2;1;1;1;2;2;2;1;1
+JHotDraw v5.1;src\CH\ifa\draw\framework\Painter.java;1;1;1;3;3;3;1;1;2;1;1;1;4
+JHotDraw v5.1;src/CH/ifa/draw/standard/BufferedUpdateStrategy.java;1;1;1;3;3;1;1;1;1;2;2;1;4
+JHotDraw v5.1;src\CH\ifa\draw\standard\AbstractHandle.java;1;1;1;3;3;2;1;1;1;2;1;1;0
+JHotDraw v5.1;src\CH\ifa\draw\standard\ChangeConnectionHandle.java;1;1;1;3;3;2;1;1;2;1;2;1;0
+JHotDraw v5.1;src\CH\ifa\draw\framework\Drawing.java;1;1;1;2;2;3;1;1;2;1;1;1;1
+JHotDraw v5.1;src\CH\ifa\draw\standard\ChangeConnectionEndHandle.java;1;1;1;3;3;1;1;1;2;1;2;1;2
+JHotDraw60;org.jhotdraw.framework.DrawingView;1;2;2;2;1;3;1;1;2;1;1;1;0
+JHotDraw60;org.jhotdraw.framework.FigureSelectionListener;1;1;1;2;2;3;1;1;1;1;1;1;1
+JHotDraw60;org.jhotdraw.standard.StandardDrawingView;2;2;2;3;1;1;2;2;2;2;2;2;2
+JHotDraw60;org.jhotdraw.application.DrawApplication;2;2;2;2;1;1;2;2;2;2;2;2;3
+JHotDraw60;org.jhotdraw.util.CommandListener;1;1;1;2;3;3;1;1;1;1;1;1;1
+JHotDraw60;org.jhotdraw.util.CommandMenu;1;1;1;2;3;1;1;1;2;2;2;1;3
+JHotDraw60;org.jhotdraw.framework.Tool;1;2;2;3;1;3;1;1;1;1;1;1;0
+JHotDraw60;org.jhotdraw.util.UndoableTool.java;2;2;2;2;1;1;1;1;1;2;2;1;2
+JHotDraw60;org.jhotdraw.standard.AbstractFigure.java;2;2;2;3;1;2;1;1;1;2;2;1;0
+JHotDraw60;org.jhotdraw.figures.NullFigure.java;2;2;2;3;1;1;1;1;2;1;2;1;2
+JHotDraw60;org.jhotdraw.standard.FigureChangeEventMulticaster.java;1;1;1;2;2;2;1;1;2;2;1;1;3
+JHotDraw60;org.jhotdraw.contrib.dnd.JHDDragSourceListener.java;1;1;1;2;3;1;1;1;1;2;2;1;2
+JHotDraw60;org.jhotdraw.framework.DrawingEditor.java;1;1;1;2;2;3;1;1;2;1;1;1;1
+JHotDraw60;org.jhotdraw.applet.DrawApplet.java;1;1;1;2;2;1;1;1;2;2;2;1;3
+JHotDraw60;org.jhotdraw.contrib.dnd.JHDDropTargetListener.java;1;1;1;2;2;1;1;1;1;2;2;1;2
+JHotDraw60;org.jhotdraw.standard.AbstractTool.java;1;2;2;3;1;2;1;1;1;2;2;1;3
+JHotDraw60;org.jhotdraw.framework.Figure.java;1;2;2;3;1;3;1;1;1;1;1;1;4
+JHotDraw60;org.jhotdraw.figures.LineConnection.java;1;1;1;3;2;1;1;1;2;2;2;1;3
+JHotDraw v5.1;src\CH\ifa\draw\standard\AbstractTool.java;1;1;1;3;3;1;1;1;1;2;2;1;3
+JHotDraw v5.1;src\CH\ifa\draw\framework\DrawingEditor.java;1;1;1;3;3;3;1;1;1;1;1;1;1
+JHotDraw v5.1;src\CH\ifa\draw\util\PaletteListener.java;1;1;1;2;3;3;1;1;1;1;1;1;1
+JHotDraw v5.1;src\CH\ifa\draw\standard\ToolButton.java;1;1;1;3;3;1;1;1;2;1;2;1;2
+JHotDraw v5.1;src\CH\ifa\draw\applet\DrawApplet.java;1;1;1;2;3;1;1;1;2;2;2;1;3
+JHotDraw v5.1;src\CH\ifa\draw\framework\Drawing.java;1;1;1;2;2;3;1;1;2;1;1;1;1
+JHotDraw v5.1;src\CH\ifa\draw\figures\EllipseFigure.java;1;1;1;3;3;1;1;1;2;1;2;1;1
+JHotDraw v5.1;src\CH\ifa\draw\framework\FigureChangeListener.java;1;1;1;2;2;3;1;1;2;1;1;1;2
+JHotDraw v5.1;src\CH\ifa\draw\figures\GroupFigure.java;2;2;2;2;1;1;2;2;2;1;2;2;3
+JHotDraw v5.1;src\CH\ifa\draw\framework\ConnectionFigure.java;1;1;1;3;2;3;1;1;2;1;1;1;0
+JUnit37;junit\framework\Test.java;1;1;1;3;3;3;1;1;1;1;1;1;4
+JUnit37;junit\textui\TestRunner.java;1;1;1;3;3;1;2;2;1;2;2;1;4
