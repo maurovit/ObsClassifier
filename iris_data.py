@@ -3,6 +3,8 @@ import tensorflow as tf
 
 TRAIN_PATH = "observer_dp_dataset.csv"
 TEST_PATH= "observer_dp_dataset_test.csv"
+VAL_PATH="observer_dp_dataset_validation.csv"
+
 CSV_COLUMN_NAMES = ['CollectionVariables','AddListenerMethod','RemoveListenerMethod',
                     'ClassDeclarationKeyword','MethodsDeclarationKeyword','ClassType','ScanCollectionsMethod',
                     'SCMCallsAbsMethod','HasSuperclass','ImplementsInterfaces','ChangeState',
@@ -15,7 +17,10 @@ def load_data(y_name='Role'):
     train_x, train_y = train, train.pop(y_name)
     test = pd.read_csv(TEST_PATH, names=CSV_COLUMN_NAMES, header=0, delimiter=';')
     test_x, test_y = test, test.pop(y_name)
-    return (train_x, train_y), (test_x,test_y)
+    validation = pd.read_csv(VAL_PATH, names=CSV_COLUMN_NAMES, header=0, delimiter=';')
+    val_x, val_y = validation, validation.pop(y_name)
+
+    return (train_x, train_y), (test_x,test_y), (val_x,val_y)
 
 def train_input_fn(features, labels, batch_size):
     """An input function for training"""
@@ -42,13 +47,3 @@ def eval_input_fn(features, labels, batch_size):
     dataset = dataset.batch(batch_size)
     # Return the dataset.
     return dataset
-
-def main():
-    (train_x, train_y), (test_x, test_y)=load_data();
-    print("Xs\n-----------------------------\n",train_x);
-    print("Ypsilons\n-----------------------------\n",train_y);
-    dataset=train_input_fn(train_x,train_y,10);
-    print("Dataset\n-----------------------------\n",dataset);
-
-if __name__ == '__main__':
-    main();

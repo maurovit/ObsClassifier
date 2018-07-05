@@ -1,0 +1,33 @@
+SoftwareName;Classes;HasSubject;HasObserver;SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC;IsObserver
+JHotDraw v5.1;StandardDrawing,DrawingChangeListener,StandardDrawingView;1;2;3;4;1;2;2;1;3;1
+JHotDraw v5.1;AbstractFigure,FigureChangeListener,PolyLineFigure,FigureChangeEventMulticaster;2;2;1;3;4;2;1;1;4;1
+JHotDraw v5.1;StandardDrawingView,Figure,LineConnection;1;2;3;4;1;3;1;1;3;0
+JHotDraw v5.1;StandardDrawingView,Painter,BufferedUpdateStrategy;1;2;3;4;3;2;3;2;3;0
+JHotDraw v5.1;AbstractHandle,DrawingView,ElbowHandle,StandardDrawingView;2;2;1;1;2;2;3;1;4;1
+JHotDraw v5.1;ChangeConnectionHandle,Drawing,ChangeConnectionEndHandle,StandardDrawing;2;2;1;1;4;2;1;1;4;1
+JHotDraw v5.1;StandardDrawingView,Tool,AbstractTool;1;2;3;4;1;2;2;1;3;1
+JHotDraw v5.1;StandardDrawingView,DrawingEditor,DrawApplication;1;2;3;4;1;2;1;1;3;1
+JHotDraw v5.1;PaletteButton,PaletteListener,ToolButton,DrawApplet;2;2;1;1;1;2;4;2;4;1
+JHotDraw v5.1;StandardDrawing,DrawingChangeListener;1;2;3;4;1;3;2;1;2;1
+JHotDraw v5.1;StandardDrawingView,Figure;1;2;3;4;1;3;1;1;2;0
+JHotDraw v5.1;StandardDrawingView,Figure;1;2;3;4;1;3;3;1;2;0
+JHotDraw60;DrawingView,FigureSelectionListener,StandardDrawingView,DrawApplication;2;2;2;1;1;3;1;1;4;1
+JHotDraw60;AbstractCommand,CommandListener,ToggleGridCommand,CommandMenu;2;2;1;1;4;2;3;1;4;1
+JHotDraw60;Tool,ToolListener,UndoableTool,ToolButton;2;2;2;1;1;2;2;1;4;1
+JHotDraw60;AbstractFigure,FigureChangeListener,NullFigure,FigureChangeEventMulticaster;2;2;1;3;4;2;1;1;4;1
+JHotDraw60;PaletteButton,PaletteListener,ToolButton,DrawApplication;2;2;1;1;1;2;4;2;4;1
+JHotDraw60;JHDDragSourceListener,DrawingEditor,DrawApplet;1;2;3;4;1;2;2;1;3;1
+JHotDraw60;JHDDropTargetListener,DrawingEditor,DrawApplet;1;2;3;4;1;2;2;1;3;1
+JHotDraw60;StandardDrawingView,Tool,AbstractTool;1;2;3;4;1;2;4;1;3;1
+JHotDraw60;StandardDrawingView,Figure,LineConnection;1;2;3;4;1;3;1;1;3;0
+JHotDraw60;StandardDrawingView,Painter,BufferedUpdateStrategy;1;2;3;4;1;2;3;2;3;0
+JHotDraw60;DrawingViewKeyListener,Command,UndoableCommand;1;2;3;4;3;2;2;1;3;0
+JHotDraw60;Drawing,DrawingChangeListener,StandardDrawing,StandardDrawingView;2;2;2;1;1;2;2;1;4;1
+JHotDraw60;FigureSelectionListener,StandardDrawingView;1;2;3;4;1;3;1;1;2;1
+JHotDraw60;ToolListener,AbstractTool$EventDispatcher;1;2;3;4;1;3;1;1;2;1
+JHotDraw60;Painter,StandardDrawingView;1;2;3;4;1;3;3;1;2;0
+JHotDraw60;StorageFormat,StorageFormatManager;1;2;3;4;1;3;3;1;2;0
+JUnit37;TestRunContext,FailureRunView;1;2;3;4;1;3;5;1;2;0
+JUnit37;Test,ActiveTestSuite;1;2;3;4;1;3;5;1;2;0
+JUnit37;BaseTestRunner,DefaultFailureDetailView;1;2;3;4;1;3;5;1;2;0
+JRefactory2624;AbstractMethodFinder,MethodSummary;2;1;3;2;4;3;5;1;2;0
