@@ -1,27 +1,28 @@
 import pandas as pd
 import tensorflow as tf
 
-TRAIN_PATH = "obs_instances_dataset.csv"
-COLUMN_NAMES=['HasSubject','HasObserver','SubjectsRelationship','SubObsDependencies','CSubObsDependencies',
-              'ObserversRelationship','CallListeners','CObsAccessSubject','NoC','IsObserver']
-ROLES=['Not Observer','Observer']
+KEYS_PREFIX="folder_"
 
-def load_data(y_name='IsObserver'):
-    dataset=pd.read_csv(TRAIN_PATH,names=COLUMN_NAMES,header=0,delimiter=';')
-    train_x, train_y= dataset,dataset.pop(y_name)
-    k_folder(dataset)
-    return (train_x,train_y)
+def k_folders(dataset,columnName,foldersNumber):
 
-def k_folder(dataset):
-    count=1
-    size=(int)(dataset['HasSubject'].count()/5)
-    print("SIZE",size)
-    folder=[];
-    for index, row in dataset.iterrows():
-        if(count<=5):
-            folder.append((index,row))
-        count+=1
-    print(folder);
+    dataset_size=dataset[columnName].count()
+    folder_size=(int)(dataset_size/foldersNumber)
+    all_folders=dict([])
+
+    for i in range(foldersNumber):
+        d=None
+        initial_row = i * folder_size
+
+        if((i+1)==foldersNumber):
+            d=dataset.iloc[initial_row:, :]
+        else:
+            final_row=(i+1)*folder_size
+            d=dataset.iloc[initial_row:final_row,:]
+
+        all_folders.update({KEYS_PREFIX + str(i + 1): d})
+
+    #df=pd.concat([df1,df2])
+    return all_folders;
 
 def train_input_fn(features, labels, batch_size):
     """An input function for training"""
@@ -47,8 +48,3 @@ def eval_input_fn(features, labels, batch_size):
     dataset = dataset.batch(batch_size)
     # Return the dataset.
     return dataset
-
-def main():
-    x,y=load_data()
-
-main()
