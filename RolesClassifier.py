@@ -5,10 +5,8 @@ import DatasetUtilities
 
 class RolesClassifier(AbstractClassifier):
 
-    FOLDERS_NUMBER = 5
-
-    def __init__(self,columnsName,rolesName):
-        super().__init__(columnsName,rolesName)
+    def __init__(self,columnsName,rolesName,foldersNumber):
+        super().__init__(columnsName,rolesName,foldersNumber)
         self.evaluationResult=None
         self.avgAccurcy=0.0
         self.trainsNumber=0

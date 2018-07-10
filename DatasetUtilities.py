@@ -4,7 +4,6 @@ import tensorflow as tf
 KEYS_PREFIX="folder_"
 
 def k_folders(dataset,columnName,foldersNumber):
-
     dataset_size=dataset[columnName].count()
     folder_size=(int)(dataset_size/foldersNumber)
     all_folders=dict([])
