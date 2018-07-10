@@ -32,6 +32,7 @@ class InstancesClassifier(AbstractClassifier):
                                                       loss_reduction=tf.losses.Reduction.SUM_BY_NONZERO_WEIGHTS,
                                                       n_classes=len(self.rolesName))
 
+
     def train(self,label_col_name,batch_size,training_steps):
         train_x, train_y=self.trainingSet, self.trainingSet.copy().pop(label_col_name)
         self.classifier.train(input_fn=lambda:DatasetUtilities.train_input_fn(train_x,train_y,batch_size),steps=training_steps)
