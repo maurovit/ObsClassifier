@@ -47,16 +47,16 @@ class AbstractClassifier(object,metaclass=abc.ABCMeta):
         for i in range(self.foldersNumber):
             testSetIndex = i + 1
             logger.warning("TEST SET - FOLDER "+str(testSetIndex))
-            traingSetFolders = []
+            trainingSetFolders = []
             logger.warning("TRAINING FOLDERS ...")
             for j in range(i):
                 logger.warning("FOLDER "+str(j + 1)+" ")
-                traingSetFolders.append(rolesFolders[DatasetUtilities.KEYS_PREFIX + str(j + 1)])
+                trainingSetFolders.append(rolesFolders[DatasetUtilities.KEYS_PREFIX + str(j + 1)])
             for j in range(i + 1, self.foldersNumber):
                 logger.warning("FOLDER "+str(j + 1)+" ")
-                traingSetFolders.append(rolesFolders[DatasetUtilities.KEYS_PREFIX + str(j + 1)])
+                trainingSetFolders.append(rolesFolders[DatasetUtilities.KEYS_PREFIX + str(j + 1)])
 
-            trainingSet = pd.concat(traingSetFolders)
+            trainingSet = pd.concat(trainingSetFolders)
             testSet = rolesFolders[DatasetUtilities.KEYS_PREFIX + str(testSetIndex)]
             self.setTrainingSet(trainingSet)
             self.setTestSet(testSet)

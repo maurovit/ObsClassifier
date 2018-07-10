@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b9d33c01-871e-4aa3-9b0b-27c6df9ecea5" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AbstractClassifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/AbstractClassifier.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DatasetUtilities.py" beforeDir="false" afterPath="$PROJECT_DIR$/DatasetUtilities.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/InstancesClassifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/InstancesClassifier.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ObserverClassifierTester.py" beforeDir="false" afterPath="$PROJECT_DIR$/ObserverClassifierTester.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RolesClassifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/RolesClassifier.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -27,8 +22,8 @@
       <file leaf-file-name="AbstractClassifier.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/AbstractClassifier.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="66" column="52" selection-start-line="66" selection-start-column="52" selection-end-line="66" selection-end-column="52" />
+            <state relative-caret-position="153">
+              <caret line="58" column="44" selection-start-line="58" selection-start-column="44" selection-end-line="58" selection-end-column="44" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -278,6 +273,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50065106" side_tool="true" weight="0.37209302" />
@@ -490,8 +486,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/AbstractClassifier.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="66" column="52" selection-start-line="66" selection-start-column="52" selection-end-line="66" selection-end-column="52" />
+        <state relative-caret-position="153">
+          <caret line="58" column="44" selection-start-line="58" selection-start-column="44" selection-end-line="58" selection-end-column="44" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
