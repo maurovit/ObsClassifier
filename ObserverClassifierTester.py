@@ -33,12 +33,18 @@ def main():
     rolesClassifier.suffleDataset()
     rolesClassifier.kFoldersTrainAndEvaluation(ROLES_TRAIN_BATCH_SIZE,ROLES_TRAINING_STEPS,ROLES_EVALUATE_BATCH_SIZE,True)
 
+    predictions=rolesClassifier.predict('softwares/software_sample.csv',0,';',8)
+    for pred in predictions:
+        print('predictions: {}'.format(pred))
+    '''
     instancesClassifier = InstancesClassifier(INSTANCES_FEATURE_COLUMNS, INSTANCE_LABELS, FOLDERS_NUMBER)
     instancesClassifier.initFeatureColumns()
     instancesClassifier.initClassifier()
     instancesClassifier.loadDataset(INSTANCES_DATASET_PATH, 0, ';')
     instancesClassifier.suffleDataset()
     instancesClassifier.kFoldersTrainAndEvaluation(INSTANCES_TRAIN_BATCH_SIZE,INSTANCES_TRAINING_STEPS,INSTANCES_EVALUATE_BATCH_SIZE,True)
+    '''
+
 
 if __name__ == '__main__':
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'

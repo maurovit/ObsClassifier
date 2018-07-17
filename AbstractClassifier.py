@@ -83,3 +83,7 @@ class AbstractClassifier(object,metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def evaluate(self,labels_name,batch_size):
         return
+
+    @abc.abstractmethod
+    def predict(self,data_path,header,delimiter,batch_size):
+        return
