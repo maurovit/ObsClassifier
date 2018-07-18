@@ -53,4 +53,4 @@ class RolesClassifier(AbstractClassifier):
     def predict(self,data_path,header,delimiter,batch_size):
         unseen_data=pd.read_csv(data_path,names=self.columnsName[:len(self.columnsName)-2],header=header,delimiter=delimiter)
         predictions=self.classifier.predict(input_fn=DatasetUtilities.eval_input_fn(unseen_data,labels=None,batch_size=batch_size))
-        return predictions
+        return (unseen_data,predictions)

@@ -1,5 +1,5 @@
-import pandas as pd
 import tensorflow as tf
+import itertools
 
 KEYS_PREFIX="folder_"
 
@@ -20,7 +20,6 @@ def k_folders(dataset,columnName,foldersNumber):
 
         all_folders.update({KEYS_PREFIX + str(i + 1): d})
 
-    #df=pd.concat([df1,df2])
     return all_folders;
 
 def train_input_fn(features, labels, batch_size):
@@ -47,3 +46,27 @@ def eval_input_fn(features, labels, batch_size):
     dataset = dataset.batch(batch_size)
     # Return the dataset.
     return dataset
+
+def get_prediction_list(data, predictions, labels):
+    i = 0
+    classNames = []
+    predictionResults = dict()
+
+    for row, column in data.iterrows():
+        classNames.append(row[1])
+
+    for pred in predictions:
+        class_id = pred['class_ids'][0]
+        probability = pred['probabilities'][class_id]
+        if (class_id != 4):
+            predictionResults.update({classNames[i]: (labels[class_id], probability * 100)})
+        i = i + 1
+
+    return predictionResults
+
+def roles_permutation(predictions_list):
+    quadruplets_list = list(itertools.permutations(predictions_list, 4))
+    triplets_list = list(itertools.permutations(predictions_list, 3))
+    pairs_list = list(itertools.permutations(predictions_list, 2))
+
+    return (quadruplets_list, triplets_list, pairs_list)
