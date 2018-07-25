@@ -18,7 +18,7 @@ INSTANCE_LABELS           = ['Not Observer','Observer']
 
 ROLES_TRAIN_BATCH_SIZE    = 20
 ROLES_EVALUATE_BATCH_SIZE = 5
-ROLES_TRAINING_STEPS      = 5000
+ROLES_TRAINING_STEPS      = 12
 
 INSTANCES_TRAIN_BATCH_SIZE    = 5
 INSTANCES_EVALUATE_BATCH_SIZE = 2
@@ -49,12 +49,10 @@ def main():
 
     sw_classes,roles_predictions = rolesClassifier.predict(SW_PATH, 0, ';', SW_ROLES_BATCH_SIZE)
     predictions_list=utils.get_prediction_list(sw_classes,roles_predictions,ROLES_LABELS)
+
     classes_quadruplets, classes_triplets, classes_pairs=utils.roles_permutation(predictions_list)
-    filtered_classes_pairs = utils.filter_pair_list(predictions_list, classes_pairs)
-
-
-    roles_permutations=dict([(utils.QUADRUPLETS_PREFIX,classes_quadruplets),(utils.TRIPLETS_PREFIX,classes_triplets),(utils.PAIRS_PREFIX,classes_pairs)])
-    utils.log_permutations(roles_permutations)
+    abs_abs_pairs, con_abs_pairs = utils.filter_pairs_list(predictions_list, classes_pairs)
+    cs_obs_co_triplets = utils.filter_triplets_list(predictions_list, classes_triplets)
     _,instances_predictions=instancesClassifier.predict(SW_CLASSES_COMBINATIONS_PATH,0,';',SW_CLASSES_COMBINATIONS_BATCH_SIZE)
 
 

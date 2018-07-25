@@ -70,42 +70,61 @@ def get_prediction_list(data, predictions, labels):
     return predictionResults
 
 def roles_permutation(predictions_list):
-    quadruplets_list = list(itertools.permutations(predictions_list, 4))
     triplets_list = list(itertools.permutations(predictions_list, 3))
     pairs_list = list(itertools.permutations(predictions_list, 2))
+    abs_permutation_list = []
+    con_permutation_list = []
+    for item in pairs_list:
+        roleOne = predictions_list[item[0]][0]
+        roleTwo = predictions_list[item[1]][0]
+        if (roleOne == 'Subject' and roleTwo == 'Observer')or(roleOne == 'Observer' and roleTwo == 'Subject') :
+            abs_permutation_list.append(item)
+        elif roleOne == 'Subject' and roleTwo == 'Subject':
+            abs_permutation_list.append(item)
+        elif roleOne == 'Observer' and roleTwo == 'Observer':
+            abs_permutation_list.append(item)
+        elif(roleOne == 'ConcreteSubject' and roleTwo == 'ConcreteObserver')or(roleOne == 'ConcreteObserver' and roleTwo == 'ConcreteSubject') :
+            con_permutation_list.append(item)
+        elif roleOne == 'ConcreteSubject' and roleTwo == 'ConcreteSubject':
+            con_permutation_list.append(item)
+        elif roleOne == 'ConcreteObserver' and roleTwo == 'ConcreteObserver':
+            con_permutation_list.append(item)
+    quadruplets_list = list(itertools.product(abs_permutation_list, con_permutation_list))
+
     return (quadruplets_list, triplets_list, pairs_list)
 
-def filter_pair_list(prediction_list, pairs_list):
-    filtered_pairs_list = []
+def filter_pairs_list(prediction_list, pairs_list):
+    abs_abs_pairs = []
+    con_abs_pairs = []
     for item in pairs_list:
         roleOne = prediction_list[item[0]][0]
         roleTwo = prediction_list[item[1]][0]
         if (roleOne == 'Subject' and roleTwo == 'Observer')or(roleOne == 'Observer' and roleTwo == 'Subject') :
-            filtered_pairs_list.append(item)
+            abs_abs_pairs.append(item)
         elif roleOne == 'Subject' and roleTwo == 'Subject':
-            filtered_pairs_list.append(item)
+            abs_abs_pairs.append(item)
         elif roleOne == 'Observer' and roleTwo == 'Observer':
-            filtered_pairs_list.append(item)
+            abs_abs_pairs.append(item)
         elif roleOne == 'ConcreteSubject' and roleTwo == 'Observer':
-            filtered_pairs_list.append(item)
+            con_abs_pairs.append(item)
         elif roleOne == 'ConcreteSubject' and roleTwo == 'Subject':
-            filtered_pairs_list.append(item)
+            con_abs_pairs.append(item)
         elif roleOne == 'ConcreteObserver' and roleTwo == 'Subject':
-            filtered_pairs_list.append(item)
+            con_abs_pairs.append(item)
         elif roleOne == 'ConcreteObserver' and roleTwo == 'Observer':
-            filtered_pairs_list.append(item)
-    return filtered_pairs_list
+            con_abs_pairs.append(item)
+
+    return (abs_abs_pairs, con_abs_pairs)
 
 def filter_triplets_list(prediction_list, triplets_list):
     index=0
+
     for item in triplets_list:
         roleOne = prediction_list[item[0]][0]
         roleTwo = prediction_list[item[1]][0]
         roleThree = prediction_list[item[2]][0]
 
-        if roleOne == 'Subject' and roleTwo == 'Subject' and roleThree == 'Suject':
-            del triplets_list[index]
-        elif roleOne == 'Observer' and roleTwo == 'Observer' and roleThree == 'Observer':
+        if roleOne == roleTwo and roleTwo == roleThree:
             del triplets_list[index]
         elif roleTwo == 'ConcreteSubject' or roleTwo == 'ConcreteObserver':
             del triplets_list[index]
@@ -116,6 +135,7 @@ def filter_triplets_list(prediction_list, triplets_list):
 
         index+=1
 
+    return triplets_list
 
 
 def get_logger(format):
@@ -124,20 +144,10 @@ def get_logger(format):
     return logger
 
 def log_predictions():
+    logger=get_logger('%(message)s')
     return
 
-def log_permutations(roles_permutations):
+def log_permutations():
     logger=get_logger('%(message)s')
-    quadruplets=roles_permutations[QUADRUPLETS_PREFIX]
-    triplets=roles_permutations[TRIPLETS_PREFIX]
-    pairs=roles_permutations[PAIRS_PREFIX]
-
-    for tuple in pairs:
-        logger.info('S - '+tuple[0]+', O - '+tuple[1])
-
-    for tuple in triplets:
-        logger.info('')
-
-    for tuple in quadruplets:
-        logger.info('S - '+tuple[0]+', O - '+tuple[1]+', CS - '+tuple[2]+', CO - '+tuple[3])
+    return
 
