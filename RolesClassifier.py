@@ -1,7 +1,7 @@
+import DatasetUtilities
 import pandas as pd
 import tensorflow as tf
 from AbstractClassifier import AbstractClassifier
-import DatasetUtilities
 
 class RolesClassifier(AbstractClassifier):
 
@@ -51,6 +51,6 @@ class RolesClassifier(AbstractClassifier):
         return self.avgAccurcy/self.trainsNumber
 
     def predict(self,data_path,header,delimiter,batch_size):
-        unseen_data=pd.read_csv(data_path,names=self.columnsName[:len(self.columnsName)-2],header=header,delimiter=delimiter)
-        predictions=self.classifier.predict(input_fn=DatasetUtilities.eval_input_fn(unseen_data,labels=None,batch_size=batch_size))
-        return (unseen_data,predictions)
+        sw_classes=pd.read_csv(data_path,names=self.columnsName[:len(self.columnsName)-1],header=header,delimiter=delimiter)
+        predictions=self.classifier.predict(input_fn=lambda:DatasetUtilities.eval_input_fn(sw_classes,labels=None,batch_size=batch_size))
+        return (sw_classes,predictions)

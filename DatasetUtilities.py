@@ -1,7 +1,12 @@
 import tensorflow as tf
 import itertools
+import logging
+import sys
 
-KEYS_PREFIX="folder_"
+KEYS_PREFIX='folder_'
+QUADRUPLETS_PREFIX='quadruplets'
+TRIPLETS_PREFIX='triplets'
+PAIRS_PREFIX='pairs'
 
 def k_folders(dataset,columnName,foldersNumber):
     dataset_size=dataset[columnName].count()
@@ -68,5 +73,71 @@ def roles_permutation(predictions_list):
     quadruplets_list = list(itertools.permutations(predictions_list, 4))
     triplets_list = list(itertools.permutations(predictions_list, 3))
     pairs_list = list(itertools.permutations(predictions_list, 2))
-
     return (quadruplets_list, triplets_list, pairs_list)
+
+def filter_pair_list(prediction_list, pairs_list):
+    filtered_pairs_list = []
+    for item in pairs_list:
+        roleOne = prediction_list[item[0]][0]
+        roleTwo = prediction_list[item[1]][0]
+        if (roleOne == 'Subject' and roleTwo == 'Observer')or(roleOne == 'Observer' and roleTwo == 'Subject') :
+            filtered_pairs_list.append(item)
+        elif roleOne == 'Subject' and roleTwo == 'Subject':
+            filtered_pairs_list.append(item)
+        elif roleOne == 'Observer' and roleTwo == 'Observer':
+            filtered_pairs_list.append(item)
+        elif roleOne == 'ConcreteSubject' and roleTwo == 'Observer':
+            filtered_pairs_list.append(item)
+        elif roleOne == 'ConcreteSubject' and roleTwo == 'Subject':
+            filtered_pairs_list.append(item)
+        elif roleOne == 'ConcreteObserver' and roleTwo == 'Subject':
+            filtered_pairs_list.append(item)
+        elif roleOne == 'ConcreteObserver' and roleTwo == 'Observer':
+            filtered_pairs_list.append(item)
+    return filtered_pairs_list
+
+def filter_triplets_list(prediction_list, triplets_list):
+    index=0
+    for item in triplets_list:
+        roleOne = prediction_list[item[0]][0]
+        roleTwo = prediction_list[item[1]][0]
+        roleThree = prediction_list[item[2]][0]
+
+        if roleOne == 'Subject' and roleTwo == 'Subject' and roleThree == 'Suject':
+            del triplets_list[index]
+        elif roleOne == 'Observer' and roleTwo == 'Observer' and roleThree == 'Observer':
+            del triplets_list[index]
+        elif roleTwo == 'ConcreteSubject' or roleTwo == 'ConcreteObserver':
+            del triplets_list[index]
+        elif roleOne == 'Subject' or roleOne == 'Observer':
+            del triplets_list[index]
+        elif roleThree == 'Subject' or roleThree == 'Observer':
+            del triplets_list[index]
+
+        index+=1
+
+
+
+def get_logger(format):
+    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format=format)
+    logger=logging.getLogger()
+    return logger
+
+def log_predictions():
+    return
+
+def log_permutations(roles_permutations):
+    logger=get_logger('%(message)s')
+    quadruplets=roles_permutations[QUADRUPLETS_PREFIX]
+    triplets=roles_permutations[TRIPLETS_PREFIX]
+    pairs=roles_permutations[PAIRS_PREFIX]
+
+    for tuple in pairs:
+        logger.info('S - '+tuple[0]+', O - '+tuple[1])
+
+    for tuple in triplets:
+        logger.info('')
+
+    for tuple in quadruplets:
+        logger.info('S - '+tuple[0]+', O - '+tuple[1]+', CS - '+tuple[2]+', CO - '+tuple[3])
+

@@ -1,6 +1,7 @@
-from AbstractClassifier import AbstractClassifier
-import tensorflow as tf
 import DatasetUtilities
+import pandas as pd
+import tensorflow as tf
+from AbstractClassifier import AbstractClassifier
 
 class InstancesClassifier(AbstractClassifier):
 
@@ -45,3 +46,8 @@ class InstancesClassifier(AbstractClassifier):
 
     def getAvgAccuracy(self):
         return self.avgAccurcy / self.trainsNumber
+
+    def predict(self,data_path,header,delimiter,batch_size):
+        obs_isntances=pd.read_csv(data_path,names=self.columnsName[:len(self.columnsName)-1],header=header,delimiter=delimiter)
+        predictions = self.classifier.predict(input_fn=lambda:DatasetUtilities.eval_input_fn(obs_isntances, labels=None, batch_size=batch_size))
+        return (obs_isntances,predictions)

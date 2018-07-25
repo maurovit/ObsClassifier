@@ -2,7 +2,6 @@ import abc
 import pandas as pd
 import DatasetUtilities
 import logging
-import sys
 
 class AbstractClassifier(object,metaclass=abc.ABCMeta):
 
@@ -39,8 +38,7 @@ class AbstractClassifier(object,metaclass=abc.ABCMeta):
         rolesFolders = DatasetUtilities.k_folders(self.dataSet, self.columnsName[0], self.foldersNumber)
         y_name = self.columnsName[len(self.columnsName) - 1]
 
-        logging.basicConfig(stream=sys.stdout,level=logging.DEBUG,format='%(name)s - %(message)s')
-        logger=logging.getLogger(self.__class__.__name__)
+        logger=DatasetUtilities.get_logger('%(name)s - %(message)s')
         logger.propagate=useLogger
         logging.disable(logging.INFO)
 

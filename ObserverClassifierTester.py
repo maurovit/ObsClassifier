@@ -28,7 +28,10 @@ FOLDERS_NUMBER = 5
 
 def main():
     SW_PATH='softwares/software_sample.csv'
-    SW_BATCH_SIZE=8
+    SW_CLASSES_COMBINATIONS_PATH='softwares/'
+
+    SW_ROLES_BATCH_SIZE=8
+    SW_CLASSES_COMBINATIONS_BATCH_SIZE=5
 
     rolesClassifier=RolesClassifier(ROLES_FEATURE_COLUMNS,ROLES_LABELS,FOLDERS_NUMBER)
     rolesClassifier.initFeatureColumns()
@@ -37,18 +40,23 @@ def main():
     rolesClassifier.suffleDataset()
     rolesClassifier.kFoldersTrainAndEvaluation(ROLES_TRAIN_BATCH_SIZE,ROLES_TRAINING_STEPS,ROLES_EVALUATE_BATCH_SIZE,True)
 
-    '''
     instancesClassifier = InstancesClassifier(INSTANCES_FEATURE_COLUMNS, INSTANCE_LABELS, FOLDERS_NUMBER)
     instancesClassifier.initFeatureColumns()
     instancesClassifier.initClassifier()
     instancesClassifier.loadDataset(INSTANCES_DATASET_PATH, 0, ';')
     instancesClassifier.suffleDataset()
     instancesClassifier.kFoldersTrainAndEvaluation(INSTANCES_TRAIN_BATCH_SIZE,INSTANCES_TRAINING_STEPS,INSTANCES_EVALUATE_BATCH_SIZE,True)
-    '''
 
-    sw_classes,predictions = rolesClassifier.predict(SW_PATH, 0, ';', SW_BATCH_SIZE)
-    predictions_list=utils.get_prediction_list(sw_classes,predictions,ROLES_LABELS)
-    classes_quadruplets,classes_triplets,classes_pairs=utils.roles_permutation(predictions_list)
+    sw_classes,roles_predictions = rolesClassifier.predict(SW_PATH, 0, ';', SW_ROLES_BATCH_SIZE)
+    predictions_list=utils.get_prediction_list(sw_classes,roles_predictions,ROLES_LABELS)
+    classes_quadruplets, classes_triplets, classes_pairs=utils.roles_permutation(predictions_list)
+    filtered_classes_pairs = utils.filter_pair_list(predictions_list, classes_pairs)
+
+
+    roles_permutations=dict([(utils.QUADRUPLETS_PREFIX,classes_quadruplets),(utils.TRIPLETS_PREFIX,classes_triplets),(utils.PAIRS_PREFIX,classes_pairs)])
+    utils.log_permutations(roles_permutations)
+    _,instances_predictions=instancesClassifier.predict(SW_CLASSES_COMBINATIONS_PATH,0,';',SW_CLASSES_COMBINATIONS_BATCH_SIZE)
+
 
 
 if __name__ == '__main__':
