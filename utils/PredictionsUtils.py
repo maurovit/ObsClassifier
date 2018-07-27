@@ -4,6 +4,12 @@ import sys
 import csv
 import os
 
+COMBINATIONS_ROLES_PREFIX=[['S','O'],
+                           ['CS','O'],
+                           ['CS','O','CO'],
+                           ['S','O','CS','CO']
+                           ]
+
 def get_predictions_list(data, predictions, labels):
     i = 0
     classNames = []
@@ -112,17 +118,19 @@ def log_combinations_on_file(path,header,combinations):
     with open(path, "w") as fp:
         writer = csv.writer(fp, delimiter=";", dialect="excel", lineterminator="\n")
         writer.writerow(header)
+        combinations_index=0
         for classes_set in combinations:
             for combination in classes_set:
                 row = ''
-                index = 1
+                roles_index = 0
                 for cl in combination:
-                    if index < len(combination):
-                        row = row + cl + ','
+                    if roles_index < len(combination)-1:
+                        row = row + COMBINATIONS_ROLES_PREFIX[combinations_index][roles_index] + '-' + cl + ','
                     else:
-                        row = row + cl
-                    index += 1
+                        row = row + COMBINATIONS_ROLES_PREFIX[combinations_index][roles_index] + '-' + cl
+                    roles_index += 1
                 writer.writerow([row])
+            combinations_index+=1
 
 def log_predictions_on_file(root_directory,path,header,predictions):
     if not os.path.exists(root_directory):
