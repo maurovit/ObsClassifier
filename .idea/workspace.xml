@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b9d33c01-871e-4aa3-9b0b-27c6df9ecea5" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/utils/DatasetUtils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DatasetUtilities.py" beforeDir="false" afterPath="$PROJECT_DIR$/DatasetUtilities.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ObserverClassifierTester.py" beforeDir="false" afterPath="$PROJECT_DIR$/ObserverClassifierTester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AbstractClassifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/classifiers/AbstractClassifier.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DatasetUtilities.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/InstancesClassifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/classifiers/InstancesClassifier.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ObserverClassifierTester.py" beforeDir="false" afterPath="$PROJECT_DIR$/tester/ObserverClassifierTester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RolesClassifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/classifiers/RolesClassifier.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,64 +19,64 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/OBS_Classifier$Classifier.coverage" NAME="Classifier Coverage Results" MODIFIED="1530861737832" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/OBS_Classifier$ObserverClassifierTester.coverage" NAME="ObserverClassifierTester Coverage Results" MODIFIED="1532512275511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/OBS_Classifier$DatasetUtilities.coverage" NAME="DatasetUtilities Coverage Results" MODIFIED="1532592940135" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/OBS_Classifier$ObserverClassifierTester.coverage" NAME="ObserverClassifierTester Coverage Results" MODIFIED="1532677679891" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/OBS_Classifier$iris_data.coverage" NAME="iris_data Coverage Results" MODIFIED="1529161744413" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/OBS_Classifier$data_two.coverage" NAME="data_two Coverage Results" MODIFIED="1531127972930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="AbstractClassifier.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AbstractClassifier.py">
+      <file leaf-file-name="DatasetUtils.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils/DatasetUtils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="10" selection-start-column="10" selection-end-column="10" />
+            <state relative-caret-position="149">
+              <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RolesClassifier.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/RolesClassifier.py">
+      <file leaf-file-name="PredictionsUtils.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/utils/PredictionsUtils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="53" column="88" selection-start-line="53" selection-start-column="88" selection-end-line="53" selection-end-column="88" />
+            <state relative-caret-position="493">
+              <caret line="50" selection-start-line="50" selection-end-line="50" />
               <folding>
-                <element signature="e#0#23#0" expanded="true" />
+                <element signature="e#0#16#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ObserverClassifierTester.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tester/ObserverClassifierTester.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="1" selection-start-line="1" selection-end-line="1" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AbstractClassifier.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/classifiers/AbstractClassifier.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="139">
+              <caret line="40" column="94" selection-start-line="40" selection-start-column="94" selection-end-line="40" selection-end-column="94" />
+              <folding>
+                <element signature="e#0#10#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="InstancesClassifier.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/InstancesClassifier.py">
+        <entry file="file://$PROJECT_DIR$/classifiers/InstancesClassifier.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="50" selection-start-line="50" selection-end-line="50" />
+            <state relative-caret-position="-204">
               <folding>
-                <element signature="e#0#23#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ObserverClassifierTester.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ObserverClassifierTester.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="32" column="25" lean-forward="true" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DatasetUtilities.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DatasetUtilities.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="148" lean-forward="true" selection-start-line="148" selection-end-line="151" selection-end-column="10" />
-              <folding>
-                <element signature="e#0#23#0" expanded="true" />
+                <element signature="e#0#30#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -94,6 +98,8 @@
       <find>load</find>
       <find>train_inp</find>
       <find>from</find>
+      <find>Predictions</find>
+      <find>DatasetUtils</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -106,11 +112,15 @@
         <option value="$PROJECT_DIR$/Classifier.py" />
         <option value="$PROJECT_DIR$/iris_data.py" />
         <option value="$PROJECT_DIR$/data_two.py" />
-        <option value="$PROJECT_DIR$/AbstractClassifier.py" />
         <option value="$PROJECT_DIR$/RolesClassifier.py" />
         <option value="$PROJECT_DIR$/InstancesClassifier.py" />
-        <option value="$PROJECT_DIR$/ObserverClassifierTester.py" />
+        <option value="$PROJECT_DIR$/venv/PredictionsUtils.py" />
         <option value="$PROJECT_DIR$/DatasetUtilities.py" />
+        <option value="$PROJECT_DIR$/PredictionsUtils.py" />
+        <option value="$PROJECT_DIR$/AbstractClassifier.py" />
+        <option value="$PROJECT_DIR$/ObserverClassifierTester.py" />
+        <option value="$PROJECT_DIR$/classifiers/AbstractClassifier.py" />
+        <option value="$PROJECT_DIR$/utils/PredictionsUtils.py" />
       </list>
     </option>
   </component>
@@ -146,12 +156,12 @@
             <path>
               <item name="OBS Classifier" type="b2602c69:ProjectViewProjectNode" />
               <item name="OBS Classifier" type="462c0819:PsiDirectoryNode" />
-              <item name="datasets" type="462c0819:PsiDirectoryNode" />
+              <item name="classifiers" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="OBS Classifier" type="b2602c69:ProjectViewProjectNode" />
               <item name="OBS Classifier" type="462c0819:PsiDirectoryNode" />
-              <item name="softwares" type="462c0819:PsiDirectoryNode" />
+              <item name="datasets" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="OBS Classifier" type="b2602c69:ProjectViewProjectNode" />
@@ -166,6 +176,14 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\utente\PycharmProjects\OBS Classifier\tester" />
+      <recent name="C:\Users\utente\PycharmProjects\OBS Classifier\utils" />
+      <recent name="C:\Users\utente\PycharmProjects\OBS Classifier\classifiers" />
+      <recent name="C:\Users\utente\PycharmProjects\OBS Classifier" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -199,6 +217,25 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
+    <configuration name="DatasetUtilities" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="OBS Classifier" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\utente\PycharmProjects\OBS Classifier\utils\DatasetUtils.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <configuration name="ObserverClassifierTester" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="OBS Classifier" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -212,7 +249,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ObserverClassifierTester.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\utente\PycharmProjects\OBS Classifier\tester\ObserverClassifierTester.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -261,10 +298,12 @@
       <item itemvalue="Python.iris_data" />
       <item itemvalue="Python.data_two" />
       <item itemvalue="Python.ObserverClassifierTester" />
+      <item itemvalue="Python.DatasetUtilities" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.ObserverClassifierTester" />
+        <item itemvalue="Python.DatasetUtilities" />
         <item itemvalue="Python.data_two" />
         <item itemvalue="Python.Classifier" />
         <item itemvalue="Python.iris_data" />
@@ -288,18 +327,17 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.22526042" side_tool="true" weight="0.32968536" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.20898438" side_tool="true" weight="0.31737345" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" sideWeight="0.77473956" weight="0.32968536" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.85546875" weight="0.44186047" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.7910156" visible="true" weight="0.5636115" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32968536" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.203125" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.203125" />
       <window_info anchor="right" id="R Packages" order="3" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="R Graphics" order="3" />
       <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32968536" />
       <window_info anchor="right" id="SciView" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -311,13 +349,15 @@
       <window_info anchor="bottom" id="Messages" order="7" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32968536" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="8" weight="0.32968536" />
     </layout>
     <layout-to-restore>
-      <window_info anchor="bottom" id="Version Control" order="1" show_stripe_button="false" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="6" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Inspection" order="11" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="10" weight="0.25" />
+      <window_info id="Favorites" order="0" side_tool="true" />
       <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.22526042" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="4" type="SLIDING" weight="0.4" />
@@ -326,17 +366,16 @@
       <window_info anchor="right" id="R Graphics" order="1" />
       <window_info active="true" anchor="bottom" id="Run" order="8" visible="true" weight="0.49247605" />
       <window_info anchor="right" id="R Packages" order="2" />
-      <window_info anchor="bottom" id="Python Console" order="5" />
       <window_info anchor="bottom" id="Find" order="7" />
       <window_info anchor="bottom" id="Debug" order="9" weight="0.4" />
       <window_info anchor="bottom" id="Terminal" order="3" />
       <window_info anchor="bottom" id="Event Log" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="2" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Cvs" order="10" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" order="1" show_stripe_button="false" />
       <window_info anchor="right" id="SciView" order="0" />
       <window_info anchor="bottom" id="Message" order="6" />
       <window_info anchor="right" id="Database" order="3" />
-      <window_info id="Favorites" order="0" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="5" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -351,8 +390,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/observer_dp_dataset.csv" />
-    <entry file="file://$PROJECT_DIR$/observer_dp_dataset_test.csv___jb_old___" />
     <entry file="file://$PROJECT_DIR$/observer_dp_dataset_test.csv" />
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/tensorflow/python/estimator/estimator.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -429,37 +466,10 @@
     <entry file="file://$PROJECT_DIR$/datasets/obs_instances_dataset.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/AbstractClassifier.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="10" selection-start-column="10" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/tensorflow/python/estimator/estimator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="495" selection-start-line="495" selection-end-line="495" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RolesClassifier.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="53" column="88" selection-start-line="53" selection-start-column="88" selection-end-line="53" selection-end-column="88" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/InstancesClassifier.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="50" selection-start-line="50" selection-end-line="50" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -478,22 +488,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DatasetUtilities.py">
+    <entry file="file://$PROJECT_DIR$/softwares/TestSW.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/DatasetUtils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="148" lean-forward="true" selection-start-line="148" selection-end-line="151" selection-end-column="10" />
+        <state relative-caret-position="149">
+          <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ObserverClassifierTester.py">
+    <entry file="file://$PROJECT_DIR$/classifiers/RolesClassifier.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="32" column="25" lean-forward="true" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
+        <state relative-caret-position="299">
+          <caret line="54" column="72" selection-start-line="54" selection-start-column="60" selection-end-line="54" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tester/ObserverClassifierTester.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" selection-start-line="1" selection-end-line="1" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classifiers/AbstractClassifier.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="139">
+          <caret line="40" column="94" selection-start-line="40" selection-start-column="94" selection-end-line="40" selection-end-column="94" />
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classifiers/InstancesClassifier.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-204">
+          <folding>
+            <element signature="e#0#30#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/PredictionsUtils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="50" selection-start-line="50" selection-end-line="50" />
+          <folding>
+            <element signature="e#0#16#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -1,7 +1,7 @@
-import DatasetUtilities
+from utils import DatasetUtils
 import pandas as pd
 import tensorflow as tf
-from AbstractClassifier import AbstractClassifier
+from classifiers.AbstractClassifier import AbstractClassifier
 
 class InstancesClassifier(AbstractClassifier):
 
@@ -36,12 +36,12 @@ class InstancesClassifier(AbstractClassifier):
 
     def train(self,label_col_name,batch_size,training_steps):
         train_x, train_y=self.trainingSet, self.trainingSet.copy().pop(label_col_name)
-        self.classifier.train(input_fn=lambda:DatasetUtilities.train_input_fn(train_x,train_y,batch_size),steps=training_steps)
+        self.classifier.train(input_fn=lambda: DatasetUtils.train_input_fn(train_x, train_y, batch_size), steps=training_steps)
         self.trainsNumber+=1
 
     def evaluate(self,label_col_name,batch_size):
         test_x, test_y=self.testSet, self.testSet.copy().pop(label_col_name)
-        self.evaluationResult=self.classifier.evaluate(input_fn=lambda:DatasetUtilities.eval_input_fn(test_x,test_y,batch_size))
+        self.evaluationResult=self.classifier.evaluate(input_fn=lambda: DatasetUtils.eval_input_fn(test_x, test_y, batch_size))
         self.avgAccurcy=self.avgAccurcy+self.evaluationResult['accuracy']
 
     def getAvgAccuracy(self):
@@ -49,5 +49,5 @@ class InstancesClassifier(AbstractClassifier):
 
     def predict(self,data_path,header,delimiter,batch_size):
         obs_isntances=pd.read_csv(data_path,names=self.columnsName[:len(self.columnsName)-1],header=header,delimiter=delimiter)
-        predictions = self.classifier.predict(input_fn=lambda:DatasetUtilities.eval_input_fn(obs_isntances, labels=None, batch_size=batch_size))
+        predictions = self.classifier.predict(input_fn=lambda: DatasetUtils.eval_input_fn(obs_isntances, labels=None, batch_size=batch_size))
         return (obs_isntances,predictions)

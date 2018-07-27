@@ -1,58 +1,10 @@
-import tensorflow as tf
 import itertools
 import logging
 import sys
+import csv
+import os
 
-KEYS_PREFIX='folder_'
-QUADRUPLETS_PREFIX='quadruplets'
-TRIPLETS_PREFIX='triplets'
-PAIRS_PREFIX='pairs'
-
-def k_folders(dataset,columnName,foldersNumber):
-    dataset_size=dataset[columnName].count()
-    folder_size=(int)(dataset_size/foldersNumber)
-    all_folders=dict([])
-
-    for i in range(foldersNumber):
-        d=None
-        initial_row = i * folder_size
-
-        if((i+1)==foldersNumber):
-            d=dataset.iloc[initial_row:, :]
-        else:
-            final_row=(i+1)*folder_size
-            d=dataset.iloc[initial_row:final_row,:]
-
-        all_folders.update({KEYS_PREFIX + str(i + 1): d})
-
-    return all_folders;
-
-def train_input_fn(features, labels, batch_size):
-    """An input function for training"""
-    # Convert the inputs to a Dataset.
-    dataset = tf.data.Dataset.from_tensor_slices((dict(features), labels))
-    # Shuffle, repeat, and batch the examples.
-    dataset = dataset.shuffle(1000).repeat().batch(batch_size)
-    # Return the dataset.
-    return dataset
-
-def eval_input_fn(features, labels, batch_size):
-    """An input function for evaluation or prediction"""
-    features=dict(features)
-    if labels is None:
-        # No labels, use only features.
-        inputs = features
-    else:
-        inputs = (features, labels)
-    # Convert the inputs to a Dataset.
-    dataset = tf.data.Dataset.from_tensor_slices(inputs)
-    # Batch the examples
-    assert batch_size is not None, "batch_size must not be None"
-    dataset = dataset.batch(batch_size)
-    # Return the dataset.
-    return dataset
-
-def get_prediction_list(data, predictions, labels):
+def get_predictions_list(data, predictions, labels):
     i = 0
     classNames = []
     predictionResults = dict()
@@ -72,6 +24,10 @@ def get_prediction_list(data, predictions, labels):
 def roles_permutation(predictions_list):
     triplets_list = list(itertools.permutations(predictions_list, 3))
     pairs_list = list(itertools.permutations(predictions_list, 2))
+    quadruplets_list=get_quadruplets_list(predictions_list,pairs_list)
+    return (quadruplets_list, triplets_list, pairs_list)
+
+def get_quadruplets_list(predictions_list,pairs_list):
     abs_permutation_list = []
     con_permutation_list = []
     for item in pairs_list:
@@ -89,9 +45,18 @@ def roles_permutation(predictions_list):
             con_permutation_list.append(item)
         elif roleOne == 'ConcreteObserver' and roleTwo == 'ConcreteObserver':
             con_permutation_list.append(item)
-    quadruplets_list = list(itertools.product(abs_permutation_list, con_permutation_list))
 
-    return (quadruplets_list, triplets_list, pairs_list)
+    quadruplets_temp_list = list(itertools.product(abs_permutation_list, con_permutation_list))
+    quadruplets_list=[]
+
+    for quadruplets in quadruplets_temp_list:
+        row=[]
+        for pair in quadruplets:
+            row.append(pair[0])
+            row.append(pair[1])
+        quadruplets_list.append(tuple(row))
+
+    return quadruplets_list
 
 def filter_pairs_list(prediction_list, pairs_list):
     abs_abs_pairs = []
@@ -138,16 +103,32 @@ def filter_triplets_list(prediction_list, triplets_list):
     return triplets_list
 
 
-def get_logger(format):
+def get_logger(format,name):
     logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format=format)
-    logger=logging.getLogger()
+    logger=logging.getLogger(name=name)
     return logger
 
-def log_predictions():
-    logger=get_logger('%(message)s')
-    return
+def log_combinations_on_file(path,header,combinations):
+    with open(path, "w") as fp:
+        writer = csv.writer(fp, delimiter=";", dialect="excel", lineterminator="\n")
+        writer.writerow(header)
+        for classes_set in combinations:
+            for combination in classes_set:
+                row = ''
+                index = 1
+                for cl in combination:
+                    if index < len(combination):
+                        row = row + cl + ','
+                    else:
+                        row = row + cl
+                    index += 1
+                writer.writerow([row])
 
-def log_permutations():
-    logger=get_logger('%(message)s')
-    return
-
+def log_predictions_on_file(root_directory,path,header,predictions):
+    if not os.path.exists(root_directory):
+        os.makedirs(root_directory)
+    with open(path,"w") as fp:
+        writer=csv.writer(fp,delimiter=";", dialect="excel", lineterminator="\n")
+        writer.writerow(header)
+        for key in predictions:
+            writer.writerow([key,predictions[key][0],"%.2f" % round(predictions[key][1],2)])

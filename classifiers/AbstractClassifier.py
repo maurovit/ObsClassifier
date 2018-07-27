@@ -1,6 +1,6 @@
 import abc
 import pandas as pd
-import DatasetUtilities
+from utils import DatasetUtils, PredictionsUtils
 import logging
 
 class AbstractClassifier(object,metaclass=abc.ABCMeta):
@@ -35,10 +35,10 @@ class AbstractClassifier(object,metaclass=abc.ABCMeta):
 
     def kFoldersTrainAndEvaluation(self,train_batch_size,train_steps,evaluation_batch_size,useLogger):
 
-        rolesFolders = DatasetUtilities.k_folders(self.dataSet, self.columnsName[0], self.foldersNumber)
+        rolesFolders = DatasetUtils.k_folders(self.dataSet, self.columnsName[0], self.foldersNumber)
         y_name = self.columnsName[len(self.columnsName) - 1]
 
-        logger=DatasetUtilities.get_logger('%(name)s - %(message)s')
+        logger = PredictionsUtils.get_logger('%(name)s - %(message)s',self.__class__.__name__)
         logger.propagate=useLogger
         logging.disable(logging.INFO)
 
@@ -49,13 +49,13 @@ class AbstractClassifier(object,metaclass=abc.ABCMeta):
             logger.warning("TRAINING FOLDERS ...")
             for j in range(i):
                 logger.warning("FOLDER "+str(j + 1)+" ")
-                trainingSetFolders.append(rolesFolders[DatasetUtilities.KEYS_PREFIX + str(j + 1)])
+                trainingSetFolders.append(rolesFolders[DatasetUtils.KEYS_PREFIX + str(j + 1)])
             for j in range(i + 1, self.foldersNumber):
                 logger.warning("FOLDER "+str(j + 1)+" ")
-                trainingSetFolders.append(rolesFolders[DatasetUtilities.KEYS_PREFIX + str(j + 1)])
+                trainingSetFolders.append(rolesFolders[DatasetUtils.KEYS_PREFIX + str(j + 1)])
 
             trainingSet = pd.concat(trainingSetFolders)
-            testSet = rolesFolders[DatasetUtilities.KEYS_PREFIX + str(testSetIndex)]
+            testSet = rolesFolders[DatasetUtils.KEYS_PREFIX + str(testSetIndex)]
             self.setTrainingSet(trainingSet)
             self.setTestSet(testSet)
             logger.warning("PHASE " + str(i + 1) + " - Training....")
