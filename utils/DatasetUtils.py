@@ -1,9 +1,4 @@
 import tensorflow as tf
-import itertools
-import logging
-import sys
-import csv
-import os
 
 KEYS_PREFIX='folder_'
 QUADRUPLETS_PREFIX='quadruplets'

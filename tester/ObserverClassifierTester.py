@@ -53,12 +53,12 @@ def main():
     '''
 
     sw_classes,roles_predictions = rolesClassifier.predict(SW_PATH, 0, ';', SW_ROLES_BATCH_SIZE)
-    predictions_list=p_utils.get_predictions_list(sw_classes,roles_predictions,ROLES_LABELS)
-    p_utils.log_predictions_on_file(PREDICTIONS_ROOT_DIRECTORY,ROLES_PREDICTIONS_FILE_PATH,ROLES_PREDICTIONS_HEADER,predictions_list)
+    roles_predictions_list=p_utils.get_predictions_list(sw_classes,roles_predictions,ROLES_LABELS)
+    p_utils.log_predictions_on_file(PREDICTIONS_ROOT_DIRECTORY,ROLES_PREDICTIONS_FILE_PATH,ROLES_PREDICTIONS_HEADER,roles_predictions_list)
 
-    classes_quadruplets, classes_triplets, classes_pairs=p_utils.roles_permutation(predictions_list)
-    abs_abs_pairs, con_abs_pairs = p_utils.filter_pairs_list(predictions_list, classes_pairs)
-    cs_obs_co_triplets = p_utils.filter_triplets_list(predictions_list, classes_triplets)
+    classes_quadruplets, classes_triplets, classes_pairs=p_utils.roles_permutation(roles_predictions_list)
+    abs_abs_pairs, con_abs_pairs = p_utils.filter_pairs_list(roles_predictions_list, classes_pairs)
+    cs_obs_co_triplets = p_utils.filter_triplets_list(roles_predictions_list, classes_triplets)
 
     combinations=[abs_abs_pairs, con_abs_pairs, cs_obs_co_triplets, classes_quadruplets]
     p_utils.log_combinations_on_file(INSTANCES_COMBINATIONS_FILE_PATH,INSTANCES_COMBINATIONS_HEADER,combinations)

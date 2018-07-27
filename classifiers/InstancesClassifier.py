@@ -8,7 +8,6 @@ class InstancesClassifier(AbstractClassifier):
     def __init__(self,columnsName, rolesName, foldersNumber):
         super().__init__(columnsName, rolesName, foldersNumber)
         self.evaluationResult = None
-        self.avgAccurcy = 0.0
         self.trainsNumber = 0
 
     def getEvaluationResult(self):
@@ -42,10 +41,7 @@ class InstancesClassifier(AbstractClassifier):
     def evaluate(self,label_col_name,batch_size):
         test_x, test_y=self.testSet, self.testSet.copy().pop(label_col_name)
         self.evaluationResult=self.classifier.evaluate(input_fn=lambda: DatasetUtils.eval_input_fn(test_x, test_y, batch_size))
-        self.avgAccurcy=self.avgAccurcy+self.evaluationResult['accuracy']
-
-    def getAvgAccuracy(self):
-        return self.avgAccurcy / self.trainsNumber
+        self.guessedInstances+=round(self.evaluationResult['accuracy']*test_x[self.columnsName[0]].count())
 
     def predict(self,data_path,header,delimiter,batch_size):
         obs_isntances=pd.read_csv(data_path,names=self.columnsName[:len(self.columnsName)-1],header=header,delimiter=delimiter)

@@ -14,6 +14,7 @@ class AbstractClassifier(object,metaclass=abc.ABCMeta):
         self.dataSet = None
         self.trainingSet = None
         self.testSet = None
+        self.guessedInstances=0
 
     def getDataset(self):
         return self.dataSet
@@ -65,6 +66,9 @@ class AbstractClassifier(object,metaclass=abc.ABCMeta):
             logger.warning("PHASE " + str(i + 1) +" RESULT - Test set accuracy: {accuracy:0.3f}\n".format(**self.getEvaluationResult()))
 
         logger.warning("FINAL RESULT - Avg Accuracy: %.3f"%self.getAvgAccuracy())
+
+    def getAvgAccuracy(self):
+        return self.guessedInstances/self.dataSet[self.columnsName[0]].count()
 
     @abc.abstractmethod
     def initFeatureColumns(self):
