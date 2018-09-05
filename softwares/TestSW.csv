@@ -1,6 +1,6 @@
 SoftwareName;FQNClass;CollectionVariables;AddListenerMethod;RemoveListenerMethod;ClassDeclarationKeyword;MethodsDeclarationKeyword;ClassType;ScanCollectionsMethod;SCMCallsAbsMethod;HasSuperclass;ImplementsInterfaces;ChangeState;AfterChangeStateIterateOverList
 testInstances;Iobservable.java;1;1;1;1;1;3;1;1;1;1;1;1
-testInstances;Iobserver;1;1;1;2;2;3;1;1;1;1;1;1
+testInstances;Iobserver.java;1;1;1;2;2;3;1;1;1;1;1;1
 testInstances;LottoGame.java;2;2;2;1;1;1;2;2;1;2;2;1
 testInstances;Player.java;1;1;1;2;2;1;1;1;1;2;2;1
 testInstances;Duck.java;1;1;1;3;3;1;1;1;1;1;2;1

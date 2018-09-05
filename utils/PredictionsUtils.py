@@ -104,22 +104,31 @@ def filter_pairs_list(prediction_list, pairs_list):
     return (abs_abs_pairs, con_abs_pairs)
 
 def filter_triplets_list(prediction_list, triplets_list):
-    index=0
+    filtered_triplets_list=[]
+
     for item in triplets_list:
         roleOne = prediction_list[item[0]][0]
         roleTwo = prediction_list[item[1]][0]
         roleThree = prediction_list[item[2]][0]
 
-        if roleOne == roleTwo and roleTwo == roleThree:
-            del triplets_list[index]
-        elif roleTwo == 'ConcreteSubject' or roleTwo == 'ConcreteObserver':
-            del triplets_list[index]
-        elif roleOne == 'Subject' or roleOne == 'Observer':
-            del triplets_list[index]
-        elif roleThree == 'Subject' or roleThree == 'Observer':
-            del triplets_list[index]
-        index+=1
-    return triplets_list
+        if roleOne == 'ConcreteSubject' and roleTwo == 'Observer' and roleThree == 'ConcreteObserver':
+            filtered_triplets_list.append(item)
+        if roleOne == 'ConcreteSubject' and roleTwo == 'Observer' and roleThree == 'ConcreteSubject':
+            filtered_triplets_list.append(item)
+        if roleOne == 'ConcreteSubject' and roleTwo == 'Subject' and roleThree == 'ConcreteObserver':
+            filtered_triplets_list.append(item)
+        if roleOne == 'ConcreteSubject' and roleTwo == 'Subject' and roleThree == 'ConcreteSubject':
+            filtered_triplets_list.append(item)
+        if roleOne == 'ConcreteObserver' and roleTwo == 'Observer' and roleThree == 'ConcreteObserver':
+            filtered_triplets_list.append(item)
+        if roleOne == 'ConcreteObserver' and roleTwo == 'Observer' and roleThree == 'ConcreteSubject':
+            filtered_triplets_list.append(item)
+        if roleOne == 'ConcreteObserver' and roleTwo == 'Subject' and roleThree == 'ConcreteObserver':
+            filtered_triplets_list.append(item)
+        if roleOne == 'ConcreteObserver' and roleTwo == 'Subject' and roleThree == 'ConcreteSubject':
+            filtered_triplets_list.append(item)
+
+    return filtered_triplets_list
 
 
 def get_logger(format,name):
