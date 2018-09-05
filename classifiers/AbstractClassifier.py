@@ -36,7 +36,7 @@ class AbstractClassifier(object,metaclass=abc.ABCMeta):
 
     def kFoldersTrainAndEvaluation(self,train_batch_size,train_steps,evaluation_batch_size,useLogger):
 
-        rolesFolders = DatasetUtils.k_folders(self.dataSet, self.columnsName[0], self.foldersNumber)
+        folders = DatasetUtils.k_folders(self.dataSet, self.columnsName[0], self.foldersNumber)
         y_name = self.columnsName[len(self.columnsName) - 1]
 
         logger = PredictionsUtils.get_logger('%(name)s - %(message)s',self.__class__.__name__)
@@ -50,20 +50,20 @@ class AbstractClassifier(object,metaclass=abc.ABCMeta):
             logger.warning("TRAINING FOLDERS ...")
             for j in range(i):
                 logger.warning("FOLDER "+str(j + 1)+" ")
-                trainingSetFolders.append(rolesFolders[DatasetUtils.KEYS_PREFIX + str(j + 1)])
+                trainingSetFolders.append(folders[DatasetUtils.FOLDERS_PREFIX + str(j + 1)])
             for j in range(i + 1, self.foldersNumber):
                 logger.warning("FOLDER "+str(j + 1)+" ")
-                trainingSetFolders.append(rolesFolders[DatasetUtils.KEYS_PREFIX + str(j + 1)])
+                trainingSetFolders.append(folders[DatasetUtils.FOLDERS_PREFIX + str(j + 1)])
 
             trainingSet = pd.concat(trainingSetFolders)
-            testSet = rolesFolders[DatasetUtils.KEYS_PREFIX + str(testSetIndex)]
+            testSet = folders[DatasetUtils.FOLDERS_PREFIX + str(testSetIndex)]
             self.setTrainingSet(trainingSet)
             self.setTestSet(testSet)
             logger.warning("PHASE " + str(i + 1) + " - Training....")
             self.train(y_name, train_batch_size, train_steps)
             logger.warning("PHASE " + str(i + 1) + " - Evaluating....")
-            self.evaluate(y_name, evaluation_batch_size)
-            logger.warning("PHASE " + str(i + 1) +" RESULT - Test set accuracy: {accuracy:0.3f}\n".format(**self.getEvaluationResult()))
+            evaluationResult=self.evaluate(y_name, evaluation_batch_size)
+            logger.warning("PHASE " + str(i + 1) +" RESULT - Test set accuracy: {accuracy:0.3f}\n".format(**evaluationResult))
 
         logger.warning("FINAL RESULT - Avg Accuracy: %.3f"%self.getAvgAccuracy())
 

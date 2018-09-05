@@ -1,0 +1,5 @@
+Class;Role;Probability
+Iobservable.java;Subject;47.08
+Iobserver;Observer;97.46
+LottoGame.java;ConcreteSubject;95.99
+Player.java;ConcreteObserver;86.38

@@ -15,8 +15,6 @@ class RolesClassifier(AbstractClassifier):
 
     def initFeatureColumns(self):
         self.featureColumns=[]
-
-        #Feature one-hot per valori booleani e per valori multipli
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[0], num_buckets=3))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[1], num_buckets=3))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[2], num_buckets=3))
@@ -45,6 +43,7 @@ class RolesClassifier(AbstractClassifier):
         test_x, test_y=self.testSet, self.testSet.copy().pop(label_col_name)
         self.evaluationResult=self.classifier.evaluate(input_fn=lambda: DatasetUtils.eval_input_fn(test_x, test_y, batch_size))
         self.guessedInstances+=round(self.evaluationResult['accuracy']*test_x[self.columnsName[0]].count())
+        return self.evaluationResult
 
     def predict(self,data_path,header,delimiter,batch_size):
         sw_classes=pd.read_csv(data_path,names=self.columnsName[:len(self.columnsName)-1],header=header,delimiter=delimiter)

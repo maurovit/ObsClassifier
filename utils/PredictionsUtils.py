@@ -10,7 +10,7 @@ COMBINATIONS_ROLES_PREFIX=[['S','O'],
                            ['S','O','CS','CO']
                            ]
 
-def get_predictions_list(data, predictions, labels):
+def get_roles_predictions_list(data, predictions, labels):
     i = 0
     classNames = []
     predictionResults = dict()
@@ -23,6 +23,22 @@ def get_predictions_list(data, predictions, labels):
         probability = pred['probabilities'][class_id]
         if (class_id != 4):
             predictionResults.update({classNames[i]: (labels[class_id], probability * 100)})
+        i = i + 1
+
+    return predictionResults
+
+def get_instances_predictions_list(data, predictions, labels):
+    i = 0
+    classNames = []
+    predictionResults = dict()
+
+    for row, column in data.iterrows():
+        classNames.append(row)
+
+    for pred in predictions:
+        class_id = pred['class_ids'][0]
+        probability = pred['probabilities'][class_id]
+        predictionResults.update({classNames[i]: (labels[class_id], probability * 100)})
         i = i + 1
 
     return predictionResults
@@ -70,7 +86,8 @@ def filter_pairs_list(prediction_list, pairs_list):
     for item in pairs_list:
         roleOne = prediction_list[item[0]][0]
         roleTwo = prediction_list[item[1]][0]
-        if (roleOne == 'Subject' and roleTwo == 'Observer')or(roleOne == 'Observer' and roleTwo == 'Subject') :
+
+        if (roleOne == 'Subject' and roleTwo == 'Observer')or(roleOne == 'Observer' and roleTwo == 'Subject'):
             abs_abs_pairs.append(item)
         elif roleOne == 'Subject' and roleTwo == 'Subject':
             abs_abs_pairs.append(item)
@@ -84,12 +101,10 @@ def filter_pairs_list(prediction_list, pairs_list):
             con_abs_pairs.append(item)
         elif roleOne == 'ConcreteObserver' and roleTwo == 'Observer':
             con_abs_pairs.append(item)
-
     return (abs_abs_pairs, con_abs_pairs)
 
 def filter_triplets_list(prediction_list, triplets_list):
     index=0
-
     for item in triplets_list:
         roleOne = prediction_list[item[0]][0]
         roleTwo = prediction_list[item[1]][0]
@@ -103,9 +118,7 @@ def filter_triplets_list(prediction_list, triplets_list):
             del triplets_list[index]
         elif roleThree == 'Subject' or roleThree == 'Observer':
             del triplets_list[index]
-
         index+=1
-
     return triplets_list
 
 

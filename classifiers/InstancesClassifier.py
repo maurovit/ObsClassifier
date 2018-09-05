@@ -15,7 +15,6 @@ class InstancesClassifier(AbstractClassifier):
 
     def initFeatureColumns(self):
         self.featureColumns = []
-
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[0], num_buckets=3))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[1], num_buckets=3))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[2], num_buckets=4))
@@ -42,8 +41,9 @@ class InstancesClassifier(AbstractClassifier):
         test_x, test_y=self.testSet, self.testSet.copy().pop(label_col_name)
         self.evaluationResult=self.classifier.evaluate(input_fn=lambda: DatasetUtils.eval_input_fn(test_x, test_y, batch_size))
         self.guessedInstances+=round(self.evaluationResult['accuracy']*test_x[self.columnsName[0]].count())
+        return self.evaluationResult
 
     def predict(self,data_path,header,delimiter,batch_size):
-        obs_isntances=pd.read_csv(data_path,names=self.columnsName[:len(self.columnsName)-1],header=header,delimiter=delimiter)
-        predictions = self.classifier.predict(input_fn=lambda: DatasetUtils.eval_input_fn(obs_isntances, labels=None, batch_size=batch_size))
-        return (obs_isntances,predictions)
+        obs_instances=pd.read_csv(data_path,names=self.columnsName[:len(self.columnsName)-1],header=header,delimiter=delimiter)
+        predictions = self.classifier.predict(input_fn=lambda: DatasetUtils.eval_input_fn(obs_instances, labels=None, batch_size=batch_size))
+        return (obs_instances,predictions)

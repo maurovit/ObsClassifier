@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-KEYS_PREFIX='folder_'
+FOLDERS_PREFIX='folder_'
 QUADRUPLETS_PREFIX='quadruplets'
 TRIPLETS_PREFIX='triplets'
 PAIRS_PREFIX='pairs'
@@ -20,7 +20,7 @@ def k_folders(dataset,columnName,foldersNumber):
             final_row=(i+1)*folder_size
             d=dataset.iloc[initial_row:final_row,:]
 
-        all_folders.update({KEYS_PREFIX + str(i + 1): d})
+        all_folders.update({FOLDERS_PREFIX + str(i + 1): d})
 
     return all_folders;
 

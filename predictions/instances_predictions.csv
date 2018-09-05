@@ -1,0 +1,23 @@
+Combinations;Result;Probability
+Iobservable.java,Iobserver;Not Observer;50.11
+Iobserver,Iobservable.java;Not Observer;50.85
+LottoGame.java,Iobservable.java;Not Observer;53.40
+LottoGame.java,Iobserver;Not Observer;51.18
+Player.java,Iobservable.java;Not Observer;53.40
+Player.java,Iobserver;Not Observer;50.15
+Iobservable.java,Iobserver,Player.java;Observer;55.56
+Iobservable.java,LottoGame.java,Player.java;Not Observer;51.12
+Iobservable.java,Player.java,LottoGame.java;Not Observer;51.12
+Iobserver,Iobservable.java,Player.java;Observer;50.59
+Iobserver,LottoGame.java,Player.java;Not Observer;51.12
+Iobserver,Player.java,LottoGame.java;Not Observer;51.12
+LottoGame.java,Iobservable.java,Player.java;Not Observer;51.47
+LottoGame.java,Iobserver,Player.java;Observer;53.51
+LottoGame.java,Player.java,Iobserver;Not Observer;51.25
+Player.java,Iobservable.java,LottoGame.java;Observer;51.29
+Player.java,Iobserver,LottoGame.java;Not Observer;51.96
+Player.java,LottoGame.java,Iobserver;Not Observer;51.43
+Iobservable.java,Iobserver,LottoGame.java,Player.java;Observer;60.73
+Iobservable.java,Iobserver,Player.java,LottoGame.java;Observer;53.18
+Iobserver,Iobservable.java,LottoGame.java,Player.java;Observer;52.92
+Iobserver,Iobservable.java,Player.java,LottoGame.java;Observer;57.87
