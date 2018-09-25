@@ -18,11 +18,12 @@ this code came from here (in 2012):
 """
 
 import ast
+import math
 import sys
 
 from .op_util import get_op_symbol, get_op_precedence, Precedence
 from .node_util import ExplicitNodeVisitor
-from .string_repr import pretty_string
+from .string_repr import pretty_string, string_triplequote_repr
 from .source_repr import pretty_source
 
 
@@ -308,8 +309,8 @@ class SourceGenerator(ExplicitNodeVisitor):
         self.statement(node)
         self.generic_visit(node)
 
-    def visit_FunctionDef(self, node, async=False):
-        prefix = 'async ' if async else ''
+    def visit_FunctionDef(self, node, is_async=False):
+        prefix = 'async ' if is_async else ''
         self.decorators(node, 1 if self.indentation else 2)
         self.statement(node, '%sdef %s' % (prefix, node.name), '(')
         self.visit_arguments(node.args)
@@ -322,7 +323,7 @@ class SourceGenerator(ExplicitNodeVisitor):
 
     # introduced in Python 3.5
     def visit_AsyncFunctionDef(self, node):
-        self.visit_FunctionDef(node, async=True)
+        self.visit_FunctionDef(node, is_async=True)
 
     def visit_ClassDef(self, node):
         have_args = []
@@ -364,24 +365,24 @@ class SourceGenerator(ExplicitNodeVisitor):
                 self.else_body(else_)
                 break
 
-    def visit_For(self, node, async=False):
+    def visit_For(self, node, is_async=False):
         set_precedence(node, node.target)
-        prefix = 'async ' if async else ''
+        prefix = 'async ' if is_async else ''
         self.statement(node, '%sfor ' % prefix,
                        node.target, ' in ', node.iter, ':')
         self.body_or_else(node)
 
     # introduced in Python 3.5
     def visit_AsyncFor(self, node):
-        self.visit_For(node, async=True)
+        self.visit_For(node, is_async=True)
 
     def visit_While(self, node):
         set_precedence(node, node.test)
         self.statement(node, 'while ', node.test, ':')
         self.body_or_else(node)
 
-    def visit_With(self, node, async=False):
-        prefix = 'async ' if async else ''
+    def visit_With(self, node, is_async=False):
+        prefix = 'async ' if is_async else ''
         self.statement(node, '%swith ' % prefix)
         if hasattr(node, "context_expr"):  # Python < 3.3
             self.visit_withitem(node)
@@ -392,7 +393,7 @@ class SourceGenerator(ExplicitNodeVisitor):
 
     # new for Python 3.5
     def visit_AsyncWith(self, node):
-        self.visit_With(node, async=True)
+        self.visit_With(node, is_async=True)
 
     # new for Python 3.3
     def visit_withitem(self, node):
@@ -580,6 +581,9 @@ class SourceGenerator(ExplicitNodeVisitor):
 
             index = len(result)
             recurse(node)
+
+            # Flush trailing newlines (so that they are part of mystr)
+            self.write('')
             mystr = ''.join(result[index:])
             del result[index:]
             self.colinfo = res_index, str_index  # Put it back like we found it
@@ -607,22 +611,38 @@ class SourceGenerator(ExplicitNodeVisitor):
                   # constants
                   new=sys.version_info >= (3, 0)):
         with self.delimit(node) as delimiters:
-            s = repr(node.n)
+            x = node.n
 
-            # Deal with infinities -- if detected, we can
-            # generate them with 1e1000.
-            signed = s.startswith('-')
-            if s[signed].isalpha():
-                im = s[-1] == 'j' and 'j' or ''
-                assert s[signed:signed + 3] == 'inf', s
-                s = '%s1e1000%s' % ('-' if signed else '', im)
+            def part(p, imaginary):
+                # Represent infinity as 1e1000 and NaN as 1e1000-1e1000.
+                s = 'j' if imaginary else ''
+                if math.isinf(p):
+                    if p < 0:
+                        return '-1e1000' + s
+                    return '1e1000' + s
+                if math.isnan(p):
+                    return '(1e1000%s-1e1000%s)' % (s, s)
+                return repr(p) + s
+
+            real = part(x.real if isinstance(x, complex) else x, imaginary=False)
+            if isinstance(x, complex):
+                imag = part(x.imag, imaginary=True)
+                if x.real == 0:
+                    s = imag
+                elif x.imag == 0:
+                    s = '(%s+0j)' % real
+                else:
+                    # x has nonzero real and imaginary parts.
+                    s = '(%s%s%s)' % (real, ['+', ''][imag.startswith('-')], imag)
+            else:
+                s = real
             self.write(s)
 
             # The Python 2.x compiler merges a unary minus
             # with a number.  This is a premature optimization
             # that we deal with here...
             if not new and delimiters.discard:
-                if signed:
+                if not isinstance(node.n, complex) and node.n < 0:
                     pow_lhs = Precedence.Pow + 1
                     delimiters.discard = delimiters.pp != pow_lhs
                 else:
@@ -643,8 +663,14 @@ class SourceGenerator(ExplicitNodeVisitor):
             self.comma_list(node.elts)
 
     def visit_Set(self, node):
-        with self.delimit('{}'):
-            self.comma_list(node.elts)
+        if node.elts:
+            with self.delimit('{}'):
+                self.comma_list(node.elts)
+        else:
+            # If we tried to use "{}" to represent an empty set, it would be
+            # interpreted as an empty dictionary. We can't use "set()" either
+            # because the name "set" might be rebound.
+            self.write('{1}.__class__()')
 
     def visit_Dict(self, node):
         set_precedence(Precedence.Comma, *node.values)

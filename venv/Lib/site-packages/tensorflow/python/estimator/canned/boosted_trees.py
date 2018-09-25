@@ -18,6 +18,7 @@ from __future__ import division
 from __future__ import print_function
 
 import collections
+import functools
 
 from tensorflow.python.estimator import estimator
 from tensorflow.python.estimator import model_fn
@@ -39,50 +40,26 @@ from tensorflow.python.summary import summary
 from tensorflow.python.training import distribute as distribute_lib
 from tensorflow.python.training import session_run_hook
 from tensorflow.python.training import training_util
-from tensorflow.python.util.tf_export import tf_export
+from tensorflow.python.util.tf_export import estimator_export
 
 # TODO(nponomareva): Reveal pruning params here.
 _TreeHParams = collections.namedtuple('TreeHParams', [
     'n_trees', 'max_depth', 'learning_rate', 'l1', 'l2', 'tree_complexity',
-    'min_node_weight'
+    'min_node_weight', 'center_bias'
 ])
 
 _HOLD_FOR_MULTI_CLASS_SUPPORT = object()
 _HOLD_FOR_MULTI_DIM_SUPPORT = object()
+_DUMMY_NUM_BUCKETS = -1
+_DUMMY_NODE_ID = -1
 
 
-def _get_max_buckets(feature_columns):
-  """Gets the maximum number of buckets from feature_columns.
-
-  Args:
-    feature_columns: a list/set of tf.feature_column.
-
-  Returns:
-    max_buckets: the maximum number of buckets among bucketized_columns.
-
-  Raises:
-    ValueError: when unsupported feature_columns are given.
-  """
-  if not feature_columns:
-    raise ValueError('feature_columns must be a non-empty list/set of '
-                     'tf.feature_column.')
-  max_buckets = 1
-  for fc in feature_columns:
-    if isinstance(fc, feature_column_lib._BucketizedColumn):  # pylint:disable=protected-access
-      # N boundaries creates (N+1) buckets.
-      max_buckets = max(max_buckets, len(fc.boundaries) + 1)
-    else:
-      raise ValueError('For now, only bucketized_column is supported but '
-                       'got: {}'.format(fc))
-  return max_buckets
-
-
-def _get_transformed_features(features, feature_columns):
+def _get_transformed_features(features, sorted_feature_columns):
   """Gets the transformed features from features/feature_columns pair.
 
   Args:
     features: a dicionary of name to Tensor.
-    feature_columns: a list/set of tf.feature_column.
+    sorted_feature_columns: a list/set of tf.feature_column, sorted by name.
 
   Returns:
     result_features: a list of the transformed features, sorted by the name.
@@ -91,38 +68,132 @@ def _get_transformed_features(features, feature_columns):
     ValueError: when unsupported features/columns are tried.
   """
   # pylint:disable=protected-access
-  for fc in feature_columns:
-    if not isinstance(fc, feature_column_lib._BucketizedColumn):
-      raise ValueError('For now, only bucketized_column is supported but '
-                       'got: {}'.format(fc))
   transformed_features = feature_column_lib._transform_features(
-      features, feature_columns)
-  # pylint:enable=protected-access
+      features, sorted_feature_columns)
   result_features = []
-  for column in sorted(transformed_features, key=lambda tc: tc.name):
-    source_name = column.source_column.name
-    squeezed_tensor = array_ops.squeeze(transformed_features[column], axis=1)
-    if len(squeezed_tensor.shape) > 1:
-      raise ValueError('For now, only supports features equivalent to rank 1 '
-                       'but column `{}` got: {}'.format(
-                           source_name, features[source_name].shape))
-    result_features.append(squeezed_tensor)
+  for column in sorted_feature_columns:
+    if isinstance(column, feature_column_lib._BucketizedColumn):
+      source_name = column.source_column.name
+      squeezed_tensor = array_ops.squeeze(transformed_features[column], axis=1)
+      if len(squeezed_tensor.shape) > 1:
+        raise ValueError('For now, only supports features equivalent to rank 1 '
+                         'but column `{}` got: {}'.format(
+                             source_name, features[source_name].shape))
+      result_features.append(squeezed_tensor)
+    elif isinstance(column, feature_column_lib._IndicatorColumn):
+      source_name = column.categorical_column.name
+      tensor = math_ops.to_int32(transformed_features[column])
+      if len(tensor.shape) > 2:
+        raise ValueError('Rank of indicator column must be no more than 2, '
+                         'but column `{}` got: {}'.format(
+                             source_name, features[source_name].shape))
+      unstacked = array_ops.unstack(tensor, axis=1)
+      result_features.extend(unstacked)
+    else:
+      raise ValueError(
+          'For now, only bucketized_column and indicator_column is supported '
+          'but got: {}'.format(column))
+    # pylint:enable=protected-access
+
   return result_features
 
 
-def _local_variable(tensor, name=None):
+def _local_variable(initial_value, name=None):
   """Stores a tensor as a local Variable for faster read."""
-  return variable_scope.variable(
-      initial_value=tensor,
+  result = variable_scope.variable(
+      initial_value=initial_value,
       trainable=False,
       collections=[ops.GraphKeys.LOCAL_VARIABLES],
       validate_shape=False,
       name=name)
+  if isinstance(initial_value, ops.Tensor):
+    # Match the resulting variable's shape if the initial_value is a Tensor.
+    result.set_shape(initial_value.shape)
+  return result
 
 
-def _cache_transformed_features(features, feature_columns, batch_size):
+def _group_features_by_num_buckets(sorted_feature_columns):
+  """Groups feature ids by the number of buckets.
+
+  Derives the feature ids based on iterating through ordered feature columns
+  and groups them by the number of buckets each feature require. Returns a
+  sorted list of buckets and a list of lists of feature ids for each of those
+  buckets.
+
+  Args:
+    sorted_feature_columns: a list/set of tf.feature_column sorted by name.
+
+  Returns:
+    bucket_size_list: a list of required bucket sizes.
+    feature_ids_list: a list of lists of feature ids for each bucket size.
+
+  Raises:
+    ValueError: when unsupported features columns are provided.
+  """
+  bucket_size_to_feature_ids_dict = collections.OrderedDict()
+
+  # TODO(nponomareva) for now we preserve the previous functionality and bucket
+  # all numeric into the same num of buckets. Can be easily changed to using
+  # each numeric's real buckets num, but we need to test that it does not cause
+  # a performance hit.
+
+  # We will replace this dummy key with the real max after we calculate it.
+  bucket_size_to_feature_ids_dict[_DUMMY_NUM_BUCKETS] = []
+
+  max_buckets_for_bucketized = 2
+  max_buckets_for_indicator = 2
+
+  feature_idx = 0
+  # pylint:disable=protected-access
+
+  for column in sorted_feature_columns:
+    if isinstance(column, feature_column_lib._IndicatorColumn):
+      num_categorical_features = column.categorical_column._num_buckets
+      if max_buckets_for_indicator not in bucket_size_to_feature_ids_dict:
+        bucket_size_to_feature_ids_dict[max_buckets_for_indicator] = []
+
+      for _ in range(num_categorical_features):
+        # We use bucket size of 2 for categorical.
+        bucket_size_to_feature_ids_dict[max_buckets_for_indicator].append(
+            feature_idx)
+        feature_idx += 1
+    elif isinstance(column, feature_column_lib._BucketizedColumn):
+      max_buckets_for_bucketized = max(max_buckets_for_bucketized,
+                                       len(column.boundaries) + 1)
+      bucket_size_to_feature_ids_dict[_DUMMY_NUM_BUCKETS].append(feature_idx)
+      feature_idx += 1
+    elif not isinstance(column, feature_column_lib._IndicatorColumn):  # pylint:disable=protected-access
+      raise ValueError(
+          'For now, only bucketized_column and indicator column are supported '
+          'but got: {}'.format(column))
+
+  # pylint:enable=protected-access
+  # Replace the dummy key with the real max num of buckets for all bucketized
+  # columns.
+  if max_buckets_for_bucketized not in bucket_size_to_feature_ids_dict:
+    bucket_size_to_feature_ids_dict[max_buckets_for_bucketized] = []
+  bucket_size_to_feature_ids_dict[max_buckets_for_bucketized].extend(
+      bucket_size_to_feature_ids_dict[_DUMMY_NUM_BUCKETS])
+  del bucket_size_to_feature_ids_dict[_DUMMY_NUM_BUCKETS]
+
+  feature_ids_list = list(bucket_size_to_feature_ids_dict.values())
+  bucket_size_list = list(bucket_size_to_feature_ids_dict.keys())
+  return bucket_size_list, feature_ids_list
+
+
+def _calculate_num_features(sorted_feature_columns):
+  num_features = 0
+  for column in sorted_feature_columns:
+    if isinstance(column, feature_column_lib._IndicatorColumn):  # pylint:disable=protected-access
+      num_features += column.categorical_column._num_buckets  # pylint:disable=protected-access
+    else:
+      num_features += 1
+  return num_features
+
+
+def _cache_transformed_features(features, sorted_feature_columns, batch_size):
   """Transform features and cache, then returns (cached_features, cache_op)."""
-  num_features = len(feature_columns)
+  num_features = _calculate_num_features(sorted_feature_columns)
   cached_features = [
       _local_variable(
           array_ops.zeros([batch_size], dtype=dtypes.int32),
@@ -132,7 +203,7 @@ def _cache_transformed_features(features, feature_columns, batch_size):
   are_features_cached = _local_variable(False, name='are_features_cached')
 
   def cache_features_and_return():
-    """Caches transoformed features.
+    """Caches transformed features.
 
     The intention is to hide get_transformed_features() from the graph by
     caching the result except the first step, since bucketize operation
@@ -144,7 +215,8 @@ def _cache_transformed_features(features, feature_columns, batch_size):
           the graph.
     """
 
-    transformed_features = _get_transformed_features(features, feature_columns)
+    transformed_features = _get_transformed_features(features,
+                                                     sorted_feature_columns)
     cached = [
         state_ops.assign(cached_features[i], transformed_features[i])
         for i in range(num_features)
@@ -191,7 +263,7 @@ class _CacheTrainingStatesUsingHashTable(object):
     elif dtypes.as_dtype(dtypes.string).is_compatible_with(example_ids.dtype):
       empty_key = ''
     else:
-      raise ValueError('Unsupported example_id_feature dtype %s.',
+      raise ValueError('Unsupported example_id_feature dtype %s.' %
                        example_ids.dtype)
     # Cache holds latest <tree_id, node_id, logits> for each example.
     # tree_id and node_id are both int32 but logits is a float32.
@@ -199,20 +271,28 @@ class _CacheTrainingStatesUsingHashTable(object):
     # bitcast the ids to int32.
     self._table_ref = lookup_ops.mutable_dense_hash_table_v2(
         empty_key=empty_key, value_dtype=dtypes.float32, value_shape=[3])
-    self._example_ids = example_ids
+    self._example_ids = ops.convert_to_tensor(example_ids)
+    if self._example_ids.shape.ndims not in (None, 1):
+      raise ValueError('example_id should have rank 1, but got %s' %
+                       self._example_ids)
     self._logits_dimension = logits_dimension
 
   def lookup(self):
     """Returns cached_tree_ids, cached_node_ids, cached_logits."""
     cached_tree_ids, cached_node_ids, cached_logits = array_ops.split(
         lookup_ops.lookup_table_find_v2(
-            self._table_ref, self._example_ids, default_value=[0.0, 0.0, 0.0]),
+            self._table_ref,
+            self._example_ids,
+            default_value=[0.0, _DUMMY_NODE_ID, 0.0]),
         [1, 1, self._logits_dimension],
         axis=1)
     cached_tree_ids = array_ops.squeeze(
         array_ops.bitcast(cached_tree_ids, dtypes.int32))
     cached_node_ids = array_ops.squeeze(
         array_ops.bitcast(cached_node_ids, dtypes.int32))
+    if self._example_ids.shape.ndims is not None:
+      cached_logits.set_shape(
+          [self._example_ids.shape[0], self._logits_dimension])
     return (cached_tree_ids, cached_node_ids, cached_logits)
 
   def insert(self, tree_ids, node_ids, logits):
@@ -254,7 +334,7 @@ class _CacheTrainingStatesUsingVariables(object):
         array_ops.zeros([batch_size], dtype=dtypes.int32),
         name='tree_ids_cache')
     self._node_ids = _local_variable(
-        array_ops.zeros([batch_size], dtype=dtypes.int32),
+        _DUMMY_NODE_ID*array_ops.ones([batch_size], dtype=dtypes.int32),
         name='node_ids_cache')
     self._logits = _local_variable(
         array_ops.zeros([batch_size, logits_dimension], dtype=dtypes.float32),
@@ -349,6 +429,8 @@ def _bt_model_fn(
     ValueError: mode or params are invalid, or features has the wrong type.
   """
   is_single_machine = (config.num_worker_replicas <= 1)
+  sorted_feature_columns = sorted(feature_columns, key=lambda tc: tc.name)
+  center_bias = tree_hparams.center_bias
   if train_in_memory:
     assert n_batches_per_layer == 1, (
         'When train_in_memory is enabled, input_fn should return the entire '
@@ -364,24 +446,26 @@ def _bt_model_fn(
   # the dimension max_splits_per_layer, instead of max_splits (for the entire
   # tree).
   max_splits = (1 << tree_hparams.max_depth) - 1
-  max_buckets = _get_max_buckets(feature_columns)
   train_op = []
   with ops.name_scope(name) as name:
     # Prepare.
     global_step = training_util.get_or_create_global_step()
-    num_features = len(feature_columns)
+    bucket_size_list, feature_ids_list = _group_features_by_num_buckets(
+        sorted_feature_columns)
     # Extract input features and set up cache for training.
     training_state_cache = None
     if mode == model_fn.ModeKeys.TRAIN and train_in_memory:
       # cache transformed features as well for in-memory training.
       batch_size = array_ops.shape(labels)[0]
-      input_feature_list, input_cache_op = _cache_transformed_features(
-          features, feature_columns, batch_size)
+      input_feature_list, input_cache_op = (
+          _cache_transformed_features(features, sorted_feature_columns,
+                                      batch_size))
       train_op.append(input_cache_op)
       training_state_cache = _CacheTrainingStatesUsingVariables(
           batch_size, head.logits_dimension)
     else:
-      input_feature_list = _get_transformed_features(features, feature_columns)
+      input_feature_list = _get_transformed_features(features,
+                                                     sorted_feature_columns)
       if mode == model_fn.ModeKeys.TRAIN and example_id_column_name:
         example_ids = features[example_id_column_name]
         training_state_cache = _CacheTrainingStatesUsingHashTable(
@@ -389,6 +473,9 @@ def _bt_model_fn(
 
     # Create Ensemble resources.
     tree_ensemble = boosted_trees_ops.TreeEnsemble(name=name)
+    # Variable that determines whether bias centering is needed.
+    center_bias_var = variable_scope.variable(
+        initial_value=center_bias, name='center_bias_needed', trainable=False)
     # Create logits.
     if mode != model_fn.ModeKeys.TRAIN:
       logits = boosted_trees_ops.predict(
@@ -409,6 +496,7 @@ def _bt_model_fn(
         # TODO(soroush): Do partial updates if this becomes a bottleneck.
         ensemble_reload = local_tree_ensemble.deserialize(
             *tree_ensemble.serialize())
+
       if training_state_cache:
         cached_tree_ids, cached_node_ids, cached_logits = (
             training_state_cache.lookup())
@@ -417,9 +505,10 @@ def _bt_model_fn(
         batch_size = array_ops.shape(labels)[0]
         cached_tree_ids, cached_node_ids, cached_logits = (
             array_ops.zeros([batch_size], dtype=dtypes.int32),
-            array_ops.zeros([batch_size], dtype=dtypes.int32),
+            _DUMMY_NODE_ID * array_ops.ones([batch_size], dtype=dtypes.int32),
             array_ops.zeros(
                 [batch_size, head.logits_dimension], dtype=dtypes.float32))
+
       with ops.control_dependencies([ensemble_reload]):
         (stamp_token, num_trees, num_finalized_trees, num_attempted_layers,
          last_layer_nodes_range) = local_tree_ensemble.get_states()
@@ -433,47 +522,80 @@ def _bt_model_fn(
             cached_node_ids=cached_node_ids,
             bucketized_features=input_feature_list,
             logits_dimension=head.logits_dimension)
+
       logits = cached_logits + partial_logits
 
     # Create training graph.
     def _train_op_fn(loss):
       """Run one training iteration."""
       if training_state_cache:
-        train_op.append(training_state_cache.insert(tree_ids, node_ids, logits))
+        # Cache logits only after center_bias is complete, if it's in progress.
+        train_op.append(
+            control_flow_ops.cond(
+                center_bias_var, control_flow_ops.no_op,
+                lambda: training_state_cache.insert(tree_ids, node_ids, logits))
+        )
+
       if closed_form_grad_and_hess_fn:
         gradients, hessians = closed_form_grad_and_hess_fn(logits, labels)
       else:
         gradients = gradients_impl.gradients(loss, logits, name='Gradients')[0]
         hessians = gradients_impl.gradients(
             gradients, logits, name='Hessians')[0]
-      stats_summary_list = [
-          array_ops.squeeze(
-              boosted_trees_ops.make_stats_summary(
-                  node_ids=node_ids,
-                  gradients=gradients,
-                  hessians=hessians,
-                  bucketized_features_list=[input_feature_list[f]],
-                  max_splits=max_splits,
-                  num_buckets=max_buckets),
-              axis=0) for f in range(num_features)
-      ]
 
-      def grow_tree_from_stats_summaries(stats_summary_list):
+      stats_summaries_list = []
+      for i, feature_ids in enumerate(feature_ids_list):
+        num_buckets = bucket_size_list[i]
+        summaries = [
+            array_ops.squeeze(
+                boosted_trees_ops.make_stats_summary(
+                    node_ids=node_ids,
+                    gradients=gradients,
+                    hessians=hessians,
+                    bucketized_features_list=[input_feature_list[f]],
+                    max_splits=max_splits,
+                    num_buckets=num_buckets),
+                axis=0) for f in feature_ids
+        ]
+        stats_summaries_list.append(summaries)
+
+      # ========= Helper methods for both in and not in memory. ==============
+      def grow_tree_from_stats_summaries(stats_summaries_list,
+                                         feature_ids_list):
         """Updates ensemble based on the best gains from stats summaries."""
-        (node_ids_per_feature, gains_list, thresholds_list,
-         left_node_contribs_list, right_node_contribs_list) = (
-             boosted_trees_ops.calculate_best_gains_per_feature(
-                 node_id_range=last_layer_nodes_range,
-                 stats_summary_list=stats_summary_list,
-                 l1=tree_hparams.l1,
-                 l2=tree_hparams.l2,
-                 tree_complexity=tree_hparams.tree_complexity,
-                 min_node_weight=tree_hparams.min_node_weight,
-                 max_splits=max_splits))
+        node_ids_per_feature = []
+        gains_list = []
+        thresholds_list = []
+        left_node_contribs_list = []
+        right_node_contribs_list = []
+        all_feature_ids = []
+
+        assert len(stats_summaries_list) == len(feature_ids_list)
+
+        for i, feature_ids in enumerate(feature_ids_list):
+          (numeric_node_ids_per_feature, numeric_gains_list,
+           numeric_thresholds_list, numeric_left_node_contribs_list,
+           numeric_right_node_contribs_list) = (
+               boosted_trees_ops.calculate_best_gains_per_feature(
+                   node_id_range=last_layer_nodes_range,
+                   stats_summary_list=stats_summaries_list[i],
+                   l1=tree_hparams.l1,
+                   l2=tree_hparams.l2,
+                   tree_complexity=tree_hparams.tree_complexity,
+                   min_node_weight=tree_hparams.min_node_weight,
+                   max_splits=max_splits))
+
+          all_feature_ids += feature_ids
+          node_ids_per_feature += numeric_node_ids_per_feature
+          gains_list += numeric_gains_list
+          thresholds_list += numeric_thresholds_list
+          left_node_contribs_list += numeric_left_node_contribs_list
+          right_node_contribs_list += numeric_right_node_contribs_list
+
         grow_op = boosted_trees_ops.update_ensemble(
             # Confirm if local_tree_ensemble or tree_ensemble should be used.
             tree_ensemble.resource_handle,
-            feature_ids=math_ops.range(0, num_features, dtype=dtypes.int32),
+            feature_ids=all_feature_ids,
             node_ids=node_ids_per_feature,
             gains=gains_list,
             thresholds=thresholds_list,
@@ -484,37 +606,126 @@ def _bt_model_fn(
             pruning_mode=boosted_trees_ops.PruningMode.NO_PRUNING)
         return grow_op
 
+      def _center_bias_fn(mean_gradients, mean_hessians):
+        """Updates the ensembles and cache (if needed) with logits prior."""
+        continue_centering = boosted_trees_ops.center_bias(
+            tree_ensemble.resource_handle,
+            mean_gradients=mean_gradients,
+            mean_hessians=mean_hessians,
+            l1=tree_hparams.l1,
+            l2=tree_hparams.l2
+        )
+        return center_bias_var.assign(continue_centering)
+
+      # ========= End of helper methods. ==============
+
       if train_in_memory and is_single_machine:
         train_op.append(distribute_lib.increment_var(global_step))
-        train_op.append(grow_tree_from_stats_summaries(stats_summary_list))
+
+        mean_gradients = array_ops.expand_dims(
+            math_ops.reduce_mean(gradients, 0), 0)
+        mean_heassians = array_ops.expand_dims(
+            math_ops.reduce_mean(hessians, 0), 0)
+
+        train_op.append(
+            control_flow_ops.cond(
+                center_bias_var,
+                lambda: _center_bias_fn(mean_gradients, mean_heassians),
+                functools.partial(grow_tree_from_stats_summaries,
+                                  stats_summaries_list, feature_ids_list)))
       else:
-        summary_accumulator = data_flow_ops.ConditionalAccumulator(
-            dtype=dtypes.float32,
-            # The stats consist of gradients and hessians (the last dimension).
-            shape=[num_features, max_splits, max_buckets, 2],
-            shared_name='stats_summary_accumulator')
-        apply_grad = summary_accumulator.apply_grad(
-            array_ops.stack(stats_summary_list, axis=0), stamp_token)
 
-        def grow_tree_from_accumulated_summaries_fn():
-          """Updates the tree with the best layer from accumulated summaries."""
-          # Take out the accumulated summaries from the accumulator and grow.
-          stats_summary_list = array_ops.unstack(
-              summary_accumulator.take_grad(1), axis=0)
-          grow_op = grow_tree_from_stats_summaries(stats_summary_list)
-          return grow_op
+        def center_bias_not_in_mem():
+          """Accumulates the data and updates the logits bias, when ready."""
+          bias_dependencies = []
 
-        with ops.control_dependencies([apply_grad]):
-          train_op.append(distribute_lib.increment_var(global_step))
-          if config.is_chief:
-            train_op.append(
-                control_flow_ops.cond(
-                    math_ops.greater_equal(
-                        summary_accumulator.num_accumulated(),
-                        n_batches_per_layer),
-                    grow_tree_from_accumulated_summaries_fn,
-                    control_flow_ops.no_op,
-                    name='wait_until_n_batches_accumulated'))
+          bias_accumulator = data_flow_ops.ConditionalAccumulator(
+              dtype=dtypes.float32,
+              # The stats consist of grads and hessians means only.
+              # TODO(nponomareva): this will change for a multiclass
+              shape=[2, 1],
+              shared_name='bias_accumulator')
+
+          grads_and_hess = array_ops.stack([gradients, hessians], axis=0)
+          grads_and_hess = math_ops.reduce_mean(grads_and_hess, axis=1)
+
+          apply_grad = bias_accumulator.apply_grad(grads_and_hess, stamp_token)
+          bias_dependencies.append(apply_grad)
+
+          def center_bias_from_accumulator():
+            accumulated = array_ops.unstack(
+                bias_accumulator.take_grad(1), axis=0)
+            return _center_bias_fn(
+                array_ops.expand_dims(accumulated[0], 0),
+                array_ops.expand_dims(accumulated[1], 0))
+
+          with ops.control_dependencies(bias_dependencies):
+            if config.is_chief:
+              center_bias_op = control_flow_ops.cond(
+                  math_ops.greater_equal(bias_accumulator.num_accumulated(),
+                                         n_batches_per_layer),
+                  center_bias_from_accumulator,
+                  control_flow_ops.no_op,
+                  name='wait_until_n_batches_for_bias_accumulated')
+
+              return center_bias_op
+            else:
+              return control_flow_ops.no_op()
+
+        def grow_not_in_mem():
+          """Accumulates the data and grows a layer when ready."""
+
+          accumulators = []
+          dependencies = []
+          for i, feature_ids in enumerate(feature_ids_list):
+            stats_summaries = stats_summaries_list[i]
+            accumulator = data_flow_ops.ConditionalAccumulator(
+                dtype=dtypes.float32,
+                # The stats consist of grads and hessians (the last dimension).
+                shape=[len(feature_ids), max_splits, bucket_size_list[i], 2],
+                shared_name='numeric_stats_summary_accumulator_' + str(i))
+            accumulators.append(accumulator)
+
+            apply_grad = accumulator.apply_grad(
+                array_ops.stack(stats_summaries, axis=0), stamp_token)
+            dependencies.append(apply_grad)
+
+          def grow_tree_from_accumulated_summaries_fn():
+            """Updates tree with the best layer from accumulated summaries."""
+            # Take out the accumulated summaries from the accumulator and grow.
+            stats_summaries_list = []
+
+            stats_summaries_list = [
+                array_ops.unstack(accumulator.take_grad(1), axis=0)
+                for accumulator in accumulators
+            ]
+
+            grow_op = grow_tree_from_stats_summaries(stats_summaries_list,
+                                                     feature_ids_list)
+            return grow_op
+
+          with ops.control_dependencies(dependencies):
+            if config.is_chief:
+              min_accumulated = math_ops.reduce_min(
+                  array_ops.stack(
+                      [acc.num_accumulated() for acc in accumulators]))
+
+              grow_model = control_flow_ops.cond(
+                  math_ops.greater_equal(min_accumulated, n_batches_per_layer),
+                  grow_tree_from_accumulated_summaries_fn,
+                  control_flow_ops.no_op,
+                  name='wait_until_n_batches_accumulated')
+
+              return grow_model
+            else:
+              return control_flow_ops.no_op()
+
+        update_model = control_flow_ops.cond(
+            center_bias_var, center_bias_not_in_mem, grow_not_in_mem)
+        train_op.append(update_model)
+        with ops.control_dependencies([update_model]):
+          increment_global = distribute_lib.increment_var(global_step)
+          train_op.append(increment_global)
 
       return control_flow_ops.group(train_op, name='train_op')
 
@@ -554,13 +765,18 @@ def _create_classification_head_and_closed_form(n_classes, weight_column,
                                                 label_vocabulary):
   """Creates a head for classifier and the closed form gradients/hessians."""
   head = _create_classification_head(n_classes, weight_column, label_vocabulary)
-  if n_classes == 2 and weight_column is None and label_vocabulary is None:
+  if (n_classes == 2 and head.logits_dimension == 1 and weight_column is None
+      and label_vocabulary is None):
     # Use the closed-form gradients/hessians for 2 class.
     def _grad_and_hess_for_logloss(logits, labels):
+      """A closed form gradient and hessian for logistic loss."""
       # TODO(youngheek): add weights handling.
       predictions = math_ops.reciprocal(math_ops.exp(-logits) + 1.0)
       normalizer = math_ops.reciprocal(
           math_ops.cast(array_ops.size(predictions), dtypes.float32))
+      labels = math_ops.cast(labels, dtypes.float32)
+      labels = head_lib._check_dense_labels_match_logits_and_reshape(  # pylint: disable=protected-access
+          labels, logits, head.logits_dimension)
       gradients = (predictions - labels) * normalizer
       hessians = predictions * (1.0 - predictions) * normalizer
       return gradients, hessians
@@ -576,16 +792,24 @@ def _create_regression_head(label_dimension, weight_column=None):
     raise ValueError('For now only 1 dimension regression is supported.'
                      'label_dimension given as {}'.format(label_dimension))
   # pylint: disable=protected-access
-  return head_lib._regression_head_with_mean_squared_error_loss(
+  return head_lib._regression_head(
       label_dimension=label_dimension,
       weight_column=weight_column,
       loss_reduction=losses.Reduction.SUM_OVER_BATCH_SIZE)
   # pylint: enable=protected-access
 
 
-@tf_export('estimator.BoostedTreesClassifier')
+@estimator_export('estimator.BoostedTreesClassifier')
 class BoostedTreesClassifier(estimator.Estimator):
-  """A Classifier for Tensorflow Boosted Trees models."""
+  """A Classifier for Tensorflow Boosted Trees models.
+
+  @compatibility(eager)
+  Estimators can be used while eager execution is enabled. Note that `input_fn`
+  and all hooks are executed inside a graph context, so they have to be written
+  to be compatible with graph mode. Note that `input_fn` code using `tf.data`
+  generally works in both graph and eager modes.
+  @end_compatibility
+  """
 
   def __init__(self,
                feature_columns,
@@ -601,7 +825,8 @@ class BoostedTreesClassifier(estimator.Estimator):
                l2_regularization=0.,
                tree_complexity=0.,
                min_node_weight=0.,
-               config=None):
+               config=None,
+               center_bias=False):
     """Initializes a `BoostedTreesClassifier` instance.
 
     Example:
@@ -669,6 +894,13 @@ class BoostedTreesClassifier(estimator.Estimator):
         split to be considered. The value will be compared with
         sum(leaf_hessian)/(batch_size * n_batches_per_layer).
       config: `RunConfig` object to configure the runtime settings.
+      center_bias: Whether bias centering needs to occur. Bias centering refers
+        to the first node in the very first tree returning the prediction that
+        is aligned with the original labels distribution. For example, for
+        regression problems, the first node will return the mean of the labels.
+        For binary classification problems, it will return a logit for a prior
+        probability of label 1.
+
 
     Raises:
       ValueError: when wrong arguments are given or unsupported functionalities
@@ -683,7 +915,7 @@ class BoostedTreesClassifier(estimator.Estimator):
     # HParams for the model.
     tree_hparams = _TreeHParams(n_trees, max_depth, learning_rate,
                                 l1_regularization, l2_regularization,
-                                tree_complexity, min_node_weight)
+                                tree_complexity, min_node_weight, center_bias)
 
     def _model_fn(features, labels, mode, config):
       return _bt_model_fn(  # pylint: disable=protected-access
@@ -701,9 +933,17 @@ class BoostedTreesClassifier(estimator.Estimator):
         model_fn=_model_fn, model_dir=model_dir, config=config)
 
 
-@tf_export('estimator.BoostedTreesRegressor')
+@estimator_export('estimator.BoostedTreesRegressor')
 class BoostedTreesRegressor(estimator.Estimator):
-  """A Regressor for Tensorflow Boosted Trees models."""
+  """A Regressor for Tensorflow Boosted Trees models.
+
+  @compatibility(eager)
+  Estimators can be used while eager execution is enabled. Note that `input_fn`
+  and all hooks are executed inside a graph context, so they have to be written
+  to be compatible with graph mode. Note that `input_fn` code using `tf.data`
+  generally works in both graph and eager modes.
+  @end_compatibility
+  """
 
   def __init__(self,
                feature_columns,
@@ -718,7 +958,8 @@ class BoostedTreesRegressor(estimator.Estimator):
                l2_regularization=0.,
                tree_complexity=0.,
                min_node_weight=0.,
-               config=None):
+               config=None,
+               center_bias=False):
     """Initializes a `BoostedTreesRegressor` instance.
 
     Example:
@@ -779,6 +1020,12 @@ class BoostedTreesRegressor(estimator.Estimator):
         split to be considered. The value will be compared with
         sum(leaf_hessian)/(batch_size * n_batches_per_layer).
       config: `RunConfig` object to configure the runtime settings.
+      center_bias: Whether bias centering needs to occur. Bias centering refers
+        to the first node in the very first tree returning the prediction that
+        is aligned with the original labels distribution. For example, for
+        regression problems, the first node will return the mean of the labels.
+        For binary classification problems, it will return a logit for a prior
+        probability of label 1.
 
     Raises:
       ValueError: when wrong arguments are given or unsupported functionalities
@@ -792,7 +1039,7 @@ class BoostedTreesRegressor(estimator.Estimator):
     # HParams for the model.
     tree_hparams = _TreeHParams(n_trees, max_depth, learning_rate,
                                 l1_regularization, l2_regularization,
-                                tree_complexity, min_node_weight)
+                                tree_complexity, min_node_weight, center_bias)
 
     def _model_fn(features, labels, mode, config):
       return _bt_model_fn(  # pylint: disable=protected-access

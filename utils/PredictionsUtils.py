@@ -87,7 +87,8 @@ def filter_pairs_list(prediction_list, pairs_list):
         roleOne = prediction_list[item[0]][0]
         roleTwo = prediction_list[item[1]][0]
 
-        if (roleOne == 'Subject' and roleTwo == 'Observer')or(roleOne == 'Observer' and roleTwo == 'Subject'):
+        if (roleOne == 'Subject' and roleTwo == 'Observer')\
+                or(roleOne == 'Observer' and roleTwo == 'Subject'):
             abs_abs_pairs.append(item)
         elif roleOne == 'Subject' and roleTwo == 'Subject':
             abs_abs_pairs.append(item)
