@@ -1,3 +1,6 @@
+REPOSITORY GITHUB  
+https://github.com/maurovit/ObsClassifier.git
+
 INSTALLAZIONE ED USO
 
 Per poter utilizzare il software è necessario inserire nel folder 'softwares' un file CSV contenente la traduzione in valori di features 
